@@ -63,71 +63,52 @@ function draw() {
 
 // Dibuja dedos y líneas
 function drawHands() {
-    for (let i = 0; i < handData.length; i++) {
-        let hand = handData[i];
+    stroke(0, 0, 255);
+    strokeWeight(3);
 
-        // Dibujar dedos
-        for (let f = 0; f < fingers.length; f++) {
-            let finger = fingers[f];
-            let localParts = [];
-            for (let j = 0; j < fingerParts.length; j++) {
-                // Mapear landmark a dedos (MediaPipe tiene indices fijos)
-                let index = fingerLandmarkIndex(finger, j);
-                if (index !== null) {
-                    let point = hand[index];
-                    localParts[j] = { x: point.x * width, y: point.y * height };
-                }
-            }
-            if (localParts.length === 4) {
-                for (let j = 0; j < 3; j++) {
-                    line(localParts[j].x, localParts[j].y, localParts[j + 1].x, localParts[j + 1].y);
-                }
-            }
+    // Define finger landmark indices once
+    const fingerIndices = {
+        thumb: [1, 2, 3, 4],
+        index: [5, 6, 7, 8],
+        middle: [9, 10, 11, 12],
+        ring: [13, 14, 15, 16],
+        pinky: [17, 18, 19, 20]
+    };
+
+    // Loop through detected hands
+    for (const hand of handData) {
+        // Draw each finger
+        for (const indices of Object.values(fingerIndices)) {
+            drawFinger(hand, indices);
+        }
+
+        // Draw landmarks (red dots)
+        noStroke();
+        fill(80, 50, 0);
+        for (const pt of hand) {
+            circle(pt.x * width, pt.y * height, 8);
         }
     }
 
-    // Dibujar distancia entre muñecas si hay 2 manos
+    // Draw distance if 2 hands are detected
     drawHandDistance();
 }
-
-// Mapeo de dedos a índices MediaPipe
-function fingerLandmarkIndex(finger, part) {
-    const map = {
-        thumb: ["_mcp", "_ip", "_tip", null],
-        index_finger: ["_mcp", "_pip", "_dip", "_tip"],
-        middle_finger: ["_mcp", "_pip", "_dip", "_tip"],
-        ring_finger: ["_mcp", "_pip", "_dip", "_tip"],
-        pinky_finger: ["_mcp", "_pip", "_dip", "_tip"]
-    };
-
-    const baseIndex = {
-        thumb_mcp: 1,
-        thumb_ip: 2,
-        thumb_tip: 4,
-        index_finger_mcp: 5,
-        index_finger_pip: 6,
-        index_finger_dip: 7,
-        index_finger_tip: 8,
-        middle_finger_mcp: 9,
-        middle_finger_pip: 10,
-        middle_finger_dip: 11,
-        middle_finger_tip: 12,
-        ring_finger_mcp: 13,
-        ring_finger_pip: 14,
-        ring_finger_dip: 15,
-        ring_finger_tip: 16,
-        pinky_finger_mcp: 17,
-        pinky_finger_pip: 18,
-        pinky_finger_dip: 19,
-        pinky_finger_tip: 20
-    };
-
-    return baseIndex[finger + part] !== undefined ? baseIndex[finger + part] : null;
+function drawFinger(hand, indexes) {
+    stroke(80, 50, 0);
+    noFill();
+    beginShape();
+    for (const i of indexes) {
+        const p = hand[i];
+        vertex(p.x * width, p.y * height);
+    }
+    endShape();
 }
 
 // Dibuja línea entre muñecas y círculos escalados según Z
 function drawHandDistance() {
     if (handData.length >= 2) {
+        fill(90,255,100);
+        stroke(90,255,100);
         const wrist1 = handData[0][0];
         const wrist2 = handData[1][0];
 
@@ -135,6 +116,8 @@ function drawHandDistance() {
 
         c1 = handCenter(handData[0]);
         c2 = handCenter(handData[1]);
+        circle(c1["x"],c1["y"],20);
+        circle(c2["x"],c2["y"],20);
         const x1 = wrist1.x * width;
         const y1 = wrist1.y * height;
         const x2 = wrist2.x * width;
@@ -174,7 +157,6 @@ function drawHandDistance() {
         //circle(x2, y2, max(10, 100 / (1 + abs(z2) * zScale)));
 
         // Mostrar distancia
-        fill(0);
         textSize(24);
         textAlign(CENTER);
         text(Math.round(distance) + " px 3D", (x1 + x2) / 2, (y1 + y2) / 2 - 15);
@@ -205,13 +187,13 @@ function drawWave(c1, c2, amp, distance) {
     const ny = py / plen;
 
     noFill();
-    stroke(0);
     beginShape();
     for (let i = 0; i <= steps; i++) {
         //const frequency = 0.1 + distance * 0.01; // frecuencia crece linealmente con la distancia
         const x = c1.x + vx * i;
         const y = c1.y + vy * i;
-        const w = sin(i * frequency + t) * amp;
+        const dampFactor = sin((i / steps) * PI);// reduce los bordes
+        const w = sin(i * frequency + t) * amp * dampFactor;
         vertex(x + nx * w, y + ny * w);
     }
     endShape();
