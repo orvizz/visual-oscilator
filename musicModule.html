@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Harmonic Wave Generator Test</title>
+
+  <!-- p5.js and sound library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/addons/p5.sound.min.js"></script>
+
+  <!-- Optional styling -->
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: #eee;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    input[type=range] {
+      width: 60%;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #66bb6a;
+    }
+
+    .toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h2>🎵 Harmonic Wave Generator Test</h2>
+
+    <label>Base Frequency (Hz)
+      <input id="freqSlider" type="range" min="100" max="1000" value="220" step="1">
+    </label>
+
+    <label>Amplitude
+      <input id="ampSlider" type="range" min="0" max="1" value="0.5" step="0.01">
+    </label>
+
+    <label>Left Volume
+      <input id="leftSlider" type="range" min="0" max="1" value="0.5" step="0.01">
+    </label>
+
+    <label>Right Volume
+      <input id="rightSlider" type="range" min="0" max="1" value="0.5" step="0.01">
+    </label>
+
+    <label>Wave Type
+      <select id="waveType">
+        <option value="sine">Sine</option>
+        <option value="triangle">Triangle</option>
+        <option value="square">Square</option>
+        <option value="sawtooth">Sawtooth</option>
+      </select>
+    </label>
+
+    <div class="toggle">
+      <span>Echo</span>
+      <input id="echoToggle" type="checkbox">
+    </div>
+
+    <div class="toggle">
+      <span>Vibrato</span>
+      <input id="vibratoToggle" type="checkbox">
+    </div>
+
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+  </main>
+
+  <!-- Import harmonic generator -->
+  <script type="module">
+    import { HarmonicWaveGenerator } from './musicModule.js';
+
+    let generator;
+
+    const freqSlider = document.getElementById('freqSlider');
+    const ampSlider = document.getElementById('ampSlider');
+    const leftSlider = document.getElementById('leftSlider');
+    const rightSlider = document.getElementById('rightSlider');
+    const waveType = document.getElementById('waveType');
+    const echoToggle = document.getElementById('echoToggle');
+    const vibratoToggle = document.getElementById('vibratoToggle');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+
+    function getParams(){
+        return {
+            baseFreq: parseFloat(freqSlider.value),
+            amplitude: parseFloat(ampSlider.value),
+            leftVol: parseFloat(leftSlider.value),
+            rightVol: parseFloat(rightSlider.value),
+            waveType: waveType.value,
+            echo: echoToggle.checked,
+            vibrato: vibratoToggle.checked
+        };
+    }
+
+    function createGenerator() {
+        if (generator) generator.stop();
+        generator = new HarmonicWaveGenerator(getParams());
+    }
+
+    
+    startBtn.onclick = () => {
+        if (generator==undefined)createGenerator();
+        generator.start();
+    };
+
+    stopBtn.onclick = () => {
+      if (generator) generator.stop();
+    };
+
+    // Live update while playing
+    const updateGenerator = () => {
+      if (!generator) return;
+      generator.update(getParams());
+    };
+
+    freqSlider.oninput = updateGenerator;
+    ampSlider.oninput = updateGenerator;
+    leftSlider.oninput = updateGenerator;
+    rightSlider.oninput = updateGenerator;
+    waveType.onchange = updateGenerator;
+    echoToggle.onchange = updateGenerator;
+    vibratoToggle.onchange = updateGenerator;
+  </script>
+</body>
+
+</html>
