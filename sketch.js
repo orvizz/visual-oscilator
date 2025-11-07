@@ -1,8 +1,10 @@
+
+import { HarmonicWaveGenerator } from "./musicModule";
+
 let video;
 let hands;
 let handData = [];
-
-let osc;
+let generator = null;
 
 let fingers = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky_finger"];
 let fingerParts = ["_mcp", "_pip", "_dip", "_tip"];
@@ -37,15 +39,23 @@ function setup() {
         width: width,
         height: height
     });
+
     cameraMP.start();
 
     strokeWeight(5);
-
-    // Inicializar oscilador
-    osc = new p5.Oscillator('sine');
-    osc.start();
-    osc.amp(0.05); // empieza en silencio
     userStartAudio();
+    createGenerator();
+    if(generator) generator.start();
+}
+
+function createGenerator() {
+    if (generator) generator.stop();
+    generator = new HarmonicWaveGenerator(getParams());
+}
+
+function updateGenerator(params) {
+    if (!generator) return;
+    generator.update(params);
 }
 
 function onResults(results) {
@@ -106,6 +116,7 @@ function drawFinger(hand, indexes) {
 
 // Dibuja línea entre muñecas y círculos escalados según Z
 function drawHandDistance() {
+    params = {};
     if (handData.length >= 2) {
         fill(90,255,100);
         stroke(90,255,100);
@@ -139,8 +150,9 @@ function drawHandDistance() {
         const freq = map(distance, 0, 700, 0.1, 1);
         const amp = distance * 0.1; // volumen
 
-        osc.freq(freq);
-        osc.amp(amp, 0.1);
+        params["baseFreq"] = freq * 220; // frecuencia base
+        params["amplitude"] = constrain(amp * 0.001, 0, 0.5); // amplitud
+        updateGenerator(params);
 
         drawWave(c1, c2, amp, distance)
 
