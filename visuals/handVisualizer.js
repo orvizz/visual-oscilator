@@ -1,199 +1,232 @@
-import { HarmonicWaveGenerator } from "../music/musicModule.js";
+/**
+ * handVisualizer.js
+ * -----------------
+ * Visual module for hand tracking and visualization using MediaPipe Hands.
+ * This module is responsible ONLY for visual rendering and hand data processing.
+ */
 
-let hands;
-let video;
-let cameraMP;
-let generator = null;
-let handData = [];
-let zScale = null;
-let videoReady = false;
-
-export async function startHandVisualizer() {
-    createCanvas(640, 480);
-
-    // === Crea un elemento de video nativo (sin p5) ===
-    //videoElement = document.createElement("video");
-    //videoElement.width = width;
-    //videoElement.height = height;
-    //videoElement.style.display = "none"; // oculto
-    //document.body.appendChild(videoElement);
-    video = createCapture(VIDEO);
-    video.size(width, height);
-    video.hide();
-    // === Configurar MediaPipe Hands ===
-    hands = new Hands({
-        locateFile: (file) =>
-            `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
-    });
-
-    hands.setOptions({
-        maxNumHands: 2,
-        modelComplexity: 1,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-    });
-
-    hands.onResults(onResults);
-
-    // === Iniciar cámara de MediaPipe ===
-    cameraMP = new Camera(video.elt, {
-        onFrame: async () => {
-            videoReady = true;
-            await hands.send({ image: video.elt });
-        },
-        width: width,
-        height: height,
-    });
-
-    try {
-        await cameraMP.start();
-        console.log("✅ Cámara iniciada correctamente");
-    } catch (e) {
-        console.error("❌ Error al iniciar la cámara:", e);
+export class HandVisualizer {
+    constructor(options = {}) {
+        this.onHandDataUpdate = options.onHandDataUpdate || null;
+        
+        this.hands = null;
+        this.video = null;
+        this.cameraMP = null;
+        this.handData = [];
+        this.zScale = null;
+        this.videoReady = false;
     }
 
-    //userStartAudio();
-    createGenerator();
-    if (generator) generator.start();
-}
+    /**
+     * Initialize and start the hand visualizer
+     */
+    async start() {
+        createCanvas(640, 480);
 
-// === CALLBACK DE MEDIAPIPE ===
-function onResults(results) {
-    handData = results.multiHandLandmarks || [];
-}
+        // Create video capture
+        this.video = createCapture(VIDEO);
+        this.video.size(width, height);
+        this.video.hide();
 
-// === DIBUJO PRINCIPAL ===
-window.draw = function draw() {
-    background(255);
+        // Configure MediaPipe Hands
+        this.hands = new Hands({
+            locateFile: (file) =>
+                `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
+        });
 
-    if (video?.loadedmetadata) {
-        image(video, 0, 0, width, height);
+        this.hands.setOptions({
+            maxNumHands: 2,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+        });
+
+        this.hands.onResults(this.onResults.bind(this));
+
+        // Start MediaPipe camera
+        this.cameraMP = new Camera(this.video.elt, {
+            onFrame: async () => {
+                this.videoReady = true;
+                await this.hands.send({ image: this.video.elt });
+            },
+            width: width,
+            height: height,
+        });
+
+        try {
+            await this.cameraMP.start();
+            console.log("✅ Camera started successfully");
+        } catch (e) {
+            console.error("❌ Error starting camera:", e);
+        }
+
+        // Set up p5.js draw loop
+        window.draw = this.draw.bind(this);
     }
 
-    if (handData.length > 0) drawHands();
-};
+    /**
+     * Stop the visualizer
+     */
+    stop() {
+        if (this.cameraMP) this.cameraMP.stop();
+        if (this.video) this.video.remove();
+    }
 
-// === GENERADOR DE SONIDO ===
-function createGenerator() {
-    if (generator) generator.stop();
-    generator = new HarmonicWaveGenerator(getParams());
-}
+    /**
+     * MediaPipe callback for hand detection results
+     */
+    onResults(results) {
+        this.handData = results.multiHandLandmarks || [];
+    }
 
-function updateGenerator(params) {
-    if (generator) generator.update(params);
-}
+    /**
+     * Main draw loop (called by p5.js)
+     */
+    draw() {
+        background(255);
 
-// === FUNCIONES DE DIBUJO ===
-function drawHands() {
-    stroke(0, 0, 255);
-    strokeWeight(3);
+        if (this.video?.loadedmetadata) {
+            image(this.video, 0, 0, width, height);
+        }
 
-    const fingerIndices = {
-        thumb: [1, 2, 3, 4],
-        index: [5, 6, 7, 8],
-        middle: [9, 10, 11, 12],
-        ring: [13, 14, 15, 16],
-        pinky: [17, 18, 19, 20],
-    };
-
-    for (const hand of handData) {
-        for (const indices of Object.values(fingerIndices)) drawFinger(hand, indices);
-
-        noStroke();
-        fill(80, 50, 0);
-        for (const pt of hand) {
-            circle(pt.x * width, pt.y * height, 8);
+        if (this.handData.length > 0) {
+            this.drawHands();
         }
     }
 
-    drawHandDistance();
-}
+    /**
+     * Draw detected hands and their features
+     */
+    drawHands() {
+        const fingerIndices = {
+            thumb: [1, 2, 3, 4],
+            index: [5, 6, 7, 8],
+            middle: [9, 10, 11, 12],
+            ring: [13, 14, 15, 16],
+            pinky: [17, 18, 19, 20],
+        };
 
-function drawFinger(hand, indexes) {
-    stroke(80, 50, 0);
-    noFill();
-    beginShape();
-    for (const i of indexes) {
-        const p = hand[i];
-        vertex(p.x * width, p.y * height);
-    }
-    endShape();
-}
+        // Draw finger lines and landmarks
+        for (const hand of this.handData) {
+            for (const indices of Object.values(fingerIndices)) {
+                this.drawFinger(hand, indices);
+            }
 
-function drawHandDistance() {
-    if (handData.length < 2) return;
-    const params = {};
+            noStroke();
+            fill(80, 50, 0);
+            for (const pt of hand) {
+                circle(pt.x * width, pt.y * height, 8);
+            }
+        }
 
-    fill(90, 255, 100);
-    stroke(90, 255, 100);
-
-    const wrist1 = handData[0][0];
-    const wrist2 = handData[1][0];
-
-    const c1 = handCenter(handData[0]);
-    const c2 = handCenter(handData[1]);
-    circle(c1.x, c1.y, 20);
-    circle(c2.x, c2.y, 20);
-
-    const dx = c1.x - c2.x;
-    const dy = c1.y - c2.y;
-    const z1 = wrist1.z;
-    const z2 = wrist2.z;
-
-    if (zScale === null) {
-        const dz = Math.abs(z1 - z2);
-        zScale = dz > 0 ? 100 / dz : 1;
+        // Draw distance between hands if two hands detected
+        if (this.handData.length >= 2) {
+            this.drawHandDistance();
+        }
     }
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const freq = map(distance, 0, 700, 20, 280);
-    const amp = distance * 0.1;
-
-    params.baseFreq = freq;
-    params.amplitude = 1;
-    updateGenerator(params);
-
-    drawWave(c1, c2, amp, distance);
-
-    textSize(24);
-    textAlign(CENTER);
-    text(`${Math.round(distance)} px 3D`, (c1.x + c2.x) / 2, (c1.y + c2.y) / 2 - 15);
-}
-
-function handCenter(hand) {
-    let sx = 0,
-        sy = 0;
-    for (let i = 0; i < hand.length; i++) {
-        sx += hand[i].x * width;
-        sy += hand[i].y * height;
+    /**
+     * Draw a single finger
+     */
+    drawFinger(hand, indexes) {
+        stroke(80, 50, 0);
+        noFill();
+        beginShape();
+        for (const i of indexes) {
+            const p = hand[i];
+            vertex(p.x * width, p.y * height);
+        }
+        endShape();
     }
-    return { x: sx / hand.length, y: sy / hand.length };
-}
 
-function drawWave(c1, c2, amp, distance) {
-    const steps = 40;
-    const t = frameCount * 0.1;
-    const frequency = map(distance, 0, 700, 0.1, 1);
-    const vx = (c2.x - c1.x) / steps;
-    const vy = (c2.y - c1.y) / steps;
-    const px = -vy;
-    const py = vx;
-    const plen = sqrt(px * px + py * py);
-    const nx = px / plen;
-    const ny = py / plen;
+    /**
+     * Draw distance visualization between two hands and notify callback
+     */
+    drawHandDistance() {
+        fill(90, 255, 100);
+        stroke(90, 255, 100);
 
-    noFill();
-    beginShape();
-    for (let i = 0; i <= steps; i++) {
-        const x = c1.x + vx * i;
-        const y = c1.y + vy * i;
-        const dampFactor = sin((i / steps) * PI);
-        const w = sin(i * frequency + t) * amp * dampFactor;
-        vertex(x + nx * w, y + ny * w);
+        const wrist1 = this.handData[0][0];
+        const wrist2 = this.handData[1][0];
+
+        const c1 = this.handCenter(this.handData[0]);
+        const c2 = this.handCenter(this.handData[1]);
+        
+        circle(c1.x, c1.y, 20);
+        circle(c2.x, c2.y, 20);
+
+        const dx = c1.x - c2.x;
+        const dy = c1.y - c2.y;
+        const z1 = wrist1.z;
+        const z2 = wrist2.z;
+
+        if (this.zScale === null) {
+            const dz = Math.abs(z1 - z2);
+            this.zScale = dz > 0 ? 100 / dz : 1;
+        }
+
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Notify the orchestrator of hand data update
+        if (this.onHandDataUpdate) {
+            this.onHandDataUpdate({
+                distance: distance,
+                center1: c1,
+                center2: c2,
+                wrist1: wrist1,
+                wrist2: wrist2
+            });
+        }
+
+        // Visual feedback
+        const amp = distance * 0.1;
+        this.drawWave(c1, c2, amp, distance);
+
+        textSize(24);
+        textAlign(CENTER);
+        text(
+            `${Math.round(distance)} px 3D`,
+            (c1.x + c2.x) / 2,
+            (c1.y + c2.y) / 2 - 15
+        );
     }
-    endShape();
-}
 
-function getParams() {
-    return { baseFreq: 220, amplitude: 1, rightVol: 1, leftVol: 1, waveType: 'sawtooth', echo: false, vibrato: false};
+    /**
+     * Calculate the center point of a hand
+     */
+    handCenter(hand) {
+        let sx = 0, sy = 0;
+        for (let i = 0; i < hand.length; i++) {
+            sx += hand[i].x * width;
+            sy += hand[i].y * height;
+        }
+        return { x: sx / hand.length, y: sy / hand.length };
+    }
+
+    /**
+     * Draw a wave visualization between two points
+     */
+    drawWave(c1, c2, amp, distance) {
+        const steps = 40;
+        const t = frameCount * 0.1;
+        const frequency = map(distance, 0, 700, 0.1, 1);
+        const vx = (c2.x - c1.x) / steps;
+        const vy = (c2.y - c1.y) / steps;
+        const px = -vy;
+        const py = vx;
+        const plen = sqrt(px * px + py * py);
+        const nx = px / plen;
+        const ny = py / plen;
+
+        noFill();
+        beginShape();
+        for (let i = 0; i <= steps; i++) {
+            const x = c1.x + vx * i;
+            const y = c1.y + vy * i;
+            const dampFactor = sin((i / steps) * PI);
+            const w = sin(i * frequency + t) * amp * dampFactor;
+            vertex(x + nx * w, y + ny * w);
+        }
+        endShape();
+    }
 }

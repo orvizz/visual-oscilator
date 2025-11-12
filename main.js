@@ -1,5 +1,6 @@
-import { startHandVisualizer } from "./visuals/handVisualizer.js";
+import { start, stop } from './orchestrator.js';
 
 window.setup = function setup() {
-    startHandVisualizer();
+    start();
 };
+
