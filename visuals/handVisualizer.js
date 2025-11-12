@@ -1,10 +1,3 @@
-/**
- * handVisualizer.js
- * -----------------
- * Visual module for hand tracking and visualization using MediaPipe Hands.
- * This module is responsible ONLY for visual rendering and hand data processing.
- */
-
 export class HandVisualizer {
     constructor(options = {}) {
         this.onHandDataUpdate = options.onHandDataUpdate || null;
@@ -15,6 +8,9 @@ export class HandVisualizer {
         this.handData = [];
         this.zScale = null;
         this.videoReady = false;
+
+        this.noHandFrameCount = 0;
+        this.noHandThreshold = 5; 
     }
 
     /**
@@ -55,9 +51,8 @@ export class HandVisualizer {
 
         try {
             await this.cameraMP.start();
-            console.log("✅ Camera started successfully");
         } catch (e) {
-            console.error("❌ Error starting camera:", e);
+            console.error("Error starting camera:", e);
         }
 
         // Set up p5.js draw loop
@@ -123,7 +118,16 @@ export class HandVisualizer {
 
         // Draw distance between hands if two hands detected
         if (this.handData.length >= 2) {
+            this.noHandFrameCount=0;
             this.drawHandDistance();
+        }else if(this.handData.length>=0){// notify no hands on screen
+            this.noHandFrameCount++;
+            if (this.noHandFrameCount >= this.noHandThreshold) {
+                this.noHandFrameCount = this.noHandThreshold;
+                if (this.onHandDataUpdate) {
+                    this.onHandDataUpdate({distance: 0});
+                }
+            }
         }
     }
 
