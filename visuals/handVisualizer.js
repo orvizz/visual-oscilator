@@ -58,7 +58,9 @@ export class HandVisualizer {
         // Set up p5.js draw loop
         window.draw = this.draw.bind(this);
     }
-
+    setFrequency(freq) {
+        this.currentFreq = freq;
+    }
     /**
      * Stop the visualizer
      */
@@ -210,25 +212,36 @@ export class HandVisualizer {
     /**
      * Draw a wave visualization between two points
      */
+    
     drawWave(c1, c2, amp, distance) {
-        const steps = 40;
-        const t = frameCount * 0.1;
-        const frequency = map(distance, 0, 700, 0.1, 1);
-        const vx = (c2.x - c1.x) / steps;
-        const vy = (c2.y - c1.y) / steps;
+        const steps = 100;
+        const t = frameCount * 0.01; // velocidad de la animación
+        const vx = (c2.x - c1.x)/steps;
+        const vy = (c2.y - c1.y)/steps;
+
+        // vector perpendicular para el desplazamiento de la onda
         const px = -vy;
         const py = vx;
         const plen = sqrt(px * px + py * py);
         const nx = px / plen;
         const ny = py / plen;
 
+        // más ciclos cuando las manos están juntas, menos cuando están lejos 
+        const numCycles = map(this.currentFreq, 20, 280, 1, 12);
+        const waveLength = steps / numCycles;
+
         noFill();
         beginShape();
         for (let i = 0; i <= steps; i++) {
             const x = c1.x + vx * i;
             const y = c1.y + vy * i;
+
+            const phase = (i / waveLength) * TWO_PI + t;
+
+            // Suavizar los bordes para aesthetics
             const dampFactor = sin((i / steps) * PI);
-            const w = sin(i * frequency + t) * amp * dampFactor;
+            const w = sin(phase) * amp * dampFactor;
+
             vertex(x + nx * w, y + ny * w);
         }
         endShape();
