@@ -151,8 +151,8 @@ export class HandVisualizer {
         const wrist1 = this.handData[0][0];
         const wrist2 = this.handData[1][0];
 
-        const c1 = this.handCenter(this.handData[0]);
-        const c2 = this.handCenter(this.handData[1]);
+        const c1 = this.handCenter(this.handData[0], wrist1, this.handData[0][13]);
+        const c2 = this.handCenter(this.handData[1], wrist2, this.handData[1][13]);
         
         circle(c1.x, c1.y, 20);
         circle(c2.x, c2.y, 20);
@@ -196,15 +196,12 @@ export class HandVisualizer {
     /**
      * Calculate the center point of a hand
      */
-    handCenter(hand) {
-        let sx = 0, sy = 0;
-        for (let i = 0; i < hand.length; i++) {
-            sx += hand[i].x * width;
-            sy += hand[i].y * height;
-        }
-        return { x: sx / hand.length, y: sy / hand.length };
+    handCenter(hand, wrist, ringMCP) {
+        const x = (wrist.x + ringMCP.x) * 0.5 * width;
+        const y = ( wrist.y + ringMCP.y) * 0.45 * height;
+        return { x, y };
     }
-
+    
     /**
      * Draw a wave visualization between two points
      */
