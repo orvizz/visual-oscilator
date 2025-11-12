@@ -1,4 +1,4 @@
-import { HarmonicWaveGenerator } from "./musicModule.js";
+import { HarmonicWaveGenerator } from "../music/musicModule.js";
 
 let hands;
 let video;
