@@ -3,21 +3,21 @@ import { HarmonicWaveGenerator } from "./music/musicModule.js";
 
 let visualizer = null;
 let generator = null;
+let soundOff=true;
 
 /**
  * Initialize and start the hand tracking with audio generation
  */
 export async function start() {
-    // Create music generator with default parameters
-    generator = new HarmonicWaveGenerator();
-    
     // Create visualizer with callback for hand data updates
     visualizer = new HandVisualizer({
         onHandDataUpdate: handleHandDataUpdate
     });
     
+    // Create music generator with default parameters
+    generator = new HarmonicWaveGenerator();
+    
     await visualizer.start();
-    generator.start();
 }
 
 /**
@@ -35,7 +35,17 @@ export function stop() {
 function handleHandDataUpdate(data) {
     if (!generator) return;
 
-    const { distance, center1, center2 } = data;
+    const { distance, center1, center2, wrist1, wrist2} = data;
+    if (distance==0){
+        generator.stop();
+        soundOff=true;
+        return;
+    }else{
+        if(soundOff){
+            soundOff=false;
+            generator.start();
+        }
+    }
 
     // Map distance to frequency and amplitude
     const freq = map(distance, 0, 700, 20, 280);
