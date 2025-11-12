@@ -38,7 +38,8 @@ function handleHandDataUpdate(data) {
     const { distance, center1, center2 } = data;
 
     // Map distance to frequency and amplitude
-    const freq = map(distance, 0, 700, 20, 280);
+    const freq = map(distance, 0, 700, 280, 20);
+    visualizer.setFrequency(freq);
     const amp = 1; // Keep amplitude constant or adjust as needed
 
     // Update the music generator
