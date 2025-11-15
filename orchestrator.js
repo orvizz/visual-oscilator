@@ -4,6 +4,9 @@ import { HarmonicWaveGenerator } from "./music/musicModule.js";
 let visualizer = null;
 let generator = null;
 let soundOff=true;
+let waveType="sine";
+let waveTypes=["sine", "custom", "triangle","square","sawtooth"];
+let currentWaveTypeIndex=0;
 
 /**
  * Initialize and start the hand tracking with audio generation
@@ -16,7 +19,12 @@ export async function start() {
     
     // Create music generator with default parameters
     generator = new HarmonicWaveGenerator();
-    
+    setInterval(() => {
+        currentWaveTypeIndex = (currentWaveTypeIndex + 1) % waveTypes.length;
+        waveType = waveTypes[currentWaveTypeIndex];
+        generator.update({ waveType: waveType });
+        visualizer.setWaveType(waveType);
+    }, 5000); // Change wave type every 10 seconds
     await visualizer.start();
 }
 
@@ -48,14 +56,14 @@ function handleHandDataUpdate(data) {
     }
 
     // Map distance to frequency and amplitude
-    const freq = map(distance, 0, 700, 280, 20);
+    const freq = map(distance, 0, Math.sqrt((window.innerWidth*0.7)**2 + (window.innerHeight*0.8)**2), 280, 20);
     visualizer.setFrequency(freq);
     const amp = 1; // Keep amplitude constant or adjust as needed
 
     // Update the music generator
     generator.update({
         baseFreq: freq,
-        amplitude: amp
+        amplitude: amp,
     });
 }
 

@@ -50,7 +50,7 @@ export class HarmonicWaveGenerator {
         this.rightVol = rightVol;
         this.echoEnabled = echo;
         this.vibratoEnabled = vibrato;
-
+        
         // Amplitude and freq ratios for harmonic balance
         this.ampRatios = [1.0, 0.6, 0.4];
         this.freqRatios = [1.0, 1.5, 2.0];
@@ -58,11 +58,11 @@ export class HarmonicWaveGenerator {
         // --- Create three harmonically related pairs of oscillators ---7
         // pitch each oscillator to the according pan.
         this.oscillators = [
-        {"left":new p5.Oscillator(this.waveType),"right":new p5.Oscillator(this.waveType)}, // base
-        {"left":new p5.Oscillator(this.waveType),"right":new p5.Oscillator(this.waveType)}, // perfect fifth
-        {"left":new p5.Oscillator(this.waveType),"right":new p5.Oscillator(this.waveType)}, // octave
+            { "left": new p5.Oscillator(this.waveType), "right": new p5.Oscillator(this.waveType) }, // base
+            { "left": new p5.Oscillator(this.waveType), "right": new p5.Oscillator(this.waveType) }, // perfect fifth
+            { "left": new p5.Oscillator(this.waveType), "right": new p5.Oscillator(this.waveType) }, // octave
         ];
-        for(let i=0; i<this.freqRatios.length;i++){
+        for (let i = 0; i < this.freqRatios.length; i++) {
             this.oscillators[i]["left"].pan(-1.);
             this.oscillators[i]["right"].pan(1.);
         }
@@ -78,7 +78,7 @@ export class HarmonicWaveGenerator {
         this.masterGain.amp(this.amplitude);
         this.leftGain.amp(this.leftVol);
         this.rightGain.amp(this.rightVol);
-        
+
         this.leftGain.connect(this.masterGain);
         this.rightGain.connect(this.masterGain);
         this.masterGain.connect();
@@ -115,42 +115,42 @@ export class HarmonicWaveGenerator {
         //     this.vibrato.start();
         // }
     }
-    updateFreq(baseFreq){
-        this.baseFreq=baseFreq;
-        for(let i=0; i<this.freqRatios.length;i++){
+    updateFreq(baseFreq) {
+        this.baseFreq = baseFreq;
+        for (let i = 0; i < this.freqRatios.length; i++) {
             this.oscillators[i]["left"].freq(this.baseFreq * this.freqRatios[i]);
             this.oscillators[i]["right"].freq(this.baseFreq * this.freqRatios[i]);
         }
     }
-    updateWaveType(waveType){
-        this.waveType=waveType;
-        this.oscillators.forEach(osc =>{
+    updateWaveType(waveType) {
+        this.waveType = waveType;
+        this.oscillators.forEach(osc => {
             osc.left.setType(waveType);
             osc.right.setType(waveType);
         });
     }
-    toggleVibrato(on){
-        if(on){
+    toggleVibrato(on) {
+        if (on) {
             // this.vibrato.start();
-        }else{
+        } else {
             // this.vibrato.stop();
         }
     }
-    toggleEcho(on){
-        if(on){
+    toggleEcho(on) {
+        if (on) {
             this.delay.process(this.masterGain, 0.25, 0.4, 1200);
-        }else{
+        } else {
             this.delay.disconnect();
         }
     }
-        
+
     start() {
-        this.oscillators.forEach(osc => {osc["left"].start();osc["right"].start()});
+        this.oscillators.forEach(osc => { osc["left"].start(); osc["right"].start() });
     }
 
     /** Stop the harmonic sound */
     stop() {
-        this.oscillators.forEach(osc => {osc["left"].stop();osc["right"].stop()});
+        this.oscillators.forEach(osc => { osc["left"].stop(); osc["right"].stop() });
         if (this.vibrato) this.vibrato.stop();
     }
 
@@ -161,7 +161,7 @@ export class HarmonicWaveGenerator {
         if (params.leftVol) this.leftGain.amp(params.leftVol);
         if (params.rightVol) this.rightGain.amp(params.rightVol);
         if (params.waveType) this.updateWaveType(params.waveType);
-        if (params.echo!=undefined) this.toggleEcho(params.echo);
-        if (params.vibrato!=undefined) this.toggleVibrato(params.vibrato);
+        if (params.echo != undefined) this.toggleEcho(params.echo);
+        if (params.vibrato != undefined) this.toggleVibrato(params.vibrato);
     }
 }

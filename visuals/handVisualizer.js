@@ -1,7 +1,7 @@
 export class HandVisualizer {
     constructor(options = {}) {
         this.onHandDataUpdate = options.onHandDataUpdate || null;
-        
+
         this.hands = null;
         this.video = null;
         this.cameraMP = null;
@@ -10,14 +10,18 @@ export class HandVisualizer {
         this.videoReady = false;
 
         this.noHandFrameCount = 0;
-        this.noHandThreshold = 5; 
+        this.noHandThreshold = 5;
+
+        this.currentWaveType = 'sine';
+
+        this.canvasSize = { width: window.innerWidth * 0.7, height: window.innerHeight * 0.8 };
     }
 
     /**
      * Initialize and start the hand visualizer
      */
     async start() {
-        createCanvas(640, 480);
+        createCanvas(this.canvasSize.width, this.canvasSize.height);
 
         // Create video capture
         this.video = createCapture(VIDEO);
@@ -60,6 +64,10 @@ export class HandVisualizer {
     }
     setFrequency(freq) {
         this.currentFreq = freq;
+    }
+
+    setWaveType(waveType) {
+        this.currentWaveType = waveType;
     }
     /**
      * Stop the visualizer
@@ -118,14 +126,14 @@ export class HandVisualizer {
 
         // Draw distance between hands if two hands detected
         if (this.handData.length >= 2) {
-            this.noHandFrameCount=0;
+            this.noHandFrameCount = 0;
             this.drawHandDistance();
-        }else if(this.handData.length>=0){// notify no hands on screen
+        } else if (this.handData.length >= 0) {// notify no hands on screen
             this.noHandFrameCount++;
             if (this.noHandFrameCount >= this.noHandThreshold) {
                 this.noHandFrameCount = this.noHandThreshold;
                 if (this.onHandDataUpdate) {
-                    this.onHandDataUpdate({distance: 0});
+                    this.onHandDataUpdate({ distance: 0 });
                 }
             }
         }
@@ -157,7 +165,7 @@ export class HandVisualizer {
 
         const c1 = this.handCenter(this.handData[0], wrist1, this.handData[0][13]);
         const c2 = this.handCenter(this.handData[1], wrist2, this.handData[1][13]);
-        
+
         circle(c1.x, c1.y, 20);
         circle(c2.x, c2.y, 20);
 
@@ -202,28 +210,28 @@ export class HandVisualizer {
      */
     handCenter(hand, wrist, ringMCP) {
         const x = (wrist.x + ringMCP.x) * 0.5 * width;
-        const y = ( wrist.y + ringMCP.y) * 0.45 * height;
+        const y = (wrist.y + ringMCP.y) * 0.45 * height;
         return { x, y };
     }
-    
+
     /**
      * Draw a wave visualization between two points
      */
-    
+
     drawWave(c1, c2, amp, distance) {
         const steps = 100;
-        const t = frameCount * 0.01; // velocidad de la animación
-        const vx = (c2.x - c1.x)/steps;
-        const vy = (c2.y - c1.y)/steps;
+        const t = frameCount * 0.01; // animation speed
+        const vx = (c2.x - c1.x) / steps;
+        const vy = (c2.y - c1.y) / steps;
 
-        // vector perpendicular para el desplazamiento de la onda
+        // perpendicular vector
         const px = -vy;
         const py = vx;
         const plen = sqrt(px * px + py * py);
         const nx = px / plen;
         const ny = py / plen;
 
-        // más ciclos cuando las manos están juntas, menos cuando están lejos 
+        // more cycles when hands are close, fewer when far
         const numCycles = map(this.currentFreq, 20, 280, 1, 12);
         const waveLength = steps / numCycles;
 
@@ -235,12 +243,61 @@ export class HandVisualizer {
 
             const phase = (i / waveLength) * TWO_PI + t;
 
-            // Suavizar los bordes para aesthetics
+            // soft edges for aesthetics
             const dampFactor = sin((i / steps) * PI);
-            const w = sin(phase) * amp * dampFactor;
+
+            let w = 0; // wave displacement
+
+            // --------------------------------------
+            // SELECT WAVE TYPE
+            // --------------------------------------
+            switch (this.currentWaveType) {
+
+                case "sine":
+                    w = sin(phase) * amp;
+                    break;
+
+                case "triangle":
+                    // p5 triangle wave formula
+                    w = (2 / PI) * asin(sin(phase)) * amp;
+                    break;
+
+                case "square":
+                    w = (sin(phase) >= 0 ? 1 : -1) * amp;
+                    break;
+
+                case "sawtooth":
+                    // saw from -1 to 1
+                    w = (2 / PI) * (phase % TWO_PI) - 1;
+                    w *= amp;
+                    break;
+
+                case "custom":
+                    // replace this with your own harmonic design
+                    w = this.customHarmonic(phase) * amp;
+                    break;
+
+                default:
+                    // fallback to sine
+                    w = sin(phase) * amp;
+                    break;
+            }
+
+            // apply damping
+            w *= dampFactor;
 
             vertex(x + nx * w, y + ny * w);
         }
         endShape();
     }
+
+    customHarmonic(phase) {
+        // A warm harmonic: fundamental + 2nd + 3rd partial
+        return (
+            1.0 * sin(phase) +
+            0.4 * sin(phase * 2) +
+            0.2 * sin(phase * 3)
+        ) / 1.6; // normalize
+    }
+
 }
