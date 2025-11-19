@@ -5,6 +5,7 @@ export class HandVisualizer {
         this.hands = null;
         this.video = null;
         this.cameraMP = null;
+        this.mirrorImageCanvas=null;
         this.handData = [];
         this.zScale = null;
         this.videoReady = false;
@@ -25,8 +26,11 @@ export class HandVisualizer {
 
         // Create video capture
         this.video = createCapture(VIDEO);
+        this.video.elt.style.transform = "scaleX(-1)";
         this.video.size(width, height);
         this.video.hide();
+        
+        this.mirrorImageCanvas = createGraphics(width, height);
 
         // Configure MediaPipe Hands
         this.hands = new Hands({
@@ -47,7 +51,11 @@ export class HandVisualizer {
         this.cameraMP = new Camera(this.video.elt, {
             onFrame: async () => {
                 this.videoReady = true;
-                await this.hands.send({ image: this.video.elt });
+                this.mirrorImageCanvas.push();
+                this.mirrorImageCanvas.scale(-1, 1);
+                this.mirrorImageCanvas.image(this.video, -width, 0, width, height);
+                this.mirrorImageCanvas.pop();
+                await this.hands.send({ image: this.mirrorImageCanvas.elt });
             },
             width: width,
             height: height,
@@ -75,6 +83,7 @@ export class HandVisualizer {
     stop() {
         if (this.cameraMP) this.cameraMP.stop();
         if (this.video) this.video.remove();
+        if (this.mirrorImageCanvas) this.mirrorImageCanvas.remove();
     }
 
     /**
@@ -91,7 +100,7 @@ export class HandVisualizer {
         background(255);
 
         if (this.video?.loadedmetadata) {
-            image(this.video, 0, 0, width, height);
+            image(this.mirrorImageCanvas, 0, 0, width, height);
         }
 
         if (this.handData.length > 0) {
@@ -196,6 +205,7 @@ export class HandVisualizer {
         const amp = distance * 0.1;
         this.drawWave(c1, c2, amp, distance);
 
+        // visual text amplitude for debugging 
         textSize(24);
         textAlign(CENTER);
         text(

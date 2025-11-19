@@ -19,12 +19,12 @@ export async function start() {
     
     // Create music generator with default parameters
     generator = new HarmonicWaveGenerator();
-    setInterval(() => {
-        currentWaveTypeIndex = (currentWaveTypeIndex + 1) % waveTypes.length;
-        waveType = waveTypes[currentWaveTypeIndex];
-        generator.update({ waveType: waveType });
-        visualizer.setWaveType(waveType);
-    }, 5000); // Change wave type every 10 seconds
+    // setInterval(() => {
+    //     currentWaveTypeIndex = (currentWaveTypeIndex + 1) % waveTypes.length;
+    //     waveType = waveTypes[currentWaveTypeIndex];
+    //     generator.update({ waveType: waveType });
+    //     visualizer.setWaveType(waveType);
+    // }, 5000); // Change wave type every 10 seconds
     await visualizer.start();
 }
 
