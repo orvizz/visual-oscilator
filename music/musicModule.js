@@ -118,8 +118,8 @@ export class HarmonicWaveGenerator {
     updateFreq(baseFreq) {
         this.baseFreq = baseFreq;
         for (let i = 0; i < this.freqRatios.length; i++) {
-            this.oscillators[i]["left"].freq(this.baseFreq * this.freqRatios[i]);
-            this.oscillators[i]["right"].freq(this.baseFreq * this.freqRatios[i]);
+            this.oscillators[i]["left"].freq(this.baseFreq * this.freqRatios[i] * (1 + random(-0.002, 0.002)));
+            this.oscillators[i]["right"].freq(this.baseFreq * this.freqRatios[i] * (1 + random(-0.002, 0.002)));
         }
     }
     updateWaveType(waveType) {
@@ -138,7 +138,7 @@ export class HarmonicWaveGenerator {
     }
     toggleEcho(on) {
         if (on) {
-            this.delay.process(this.masterGain, 0.25, 0.4, 1200);
+            this.delay.process(this.masterGain, 3, 2, 1200);
         } else {
             this.delay.disconnect();
         }

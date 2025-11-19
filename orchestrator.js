@@ -55,9 +55,17 @@ function handleHandDataUpdate(data) {
         }
     }
 
+    // Maximum distance based on window size
+    const maxDistance = Math.sqrt((window.innerWidth * 0.7) ** 2 + (window.innerHeight * 0.8) ** 2);
+
+
     // Map distance to frequency and amplitude
-    const freq = map(distance, 0, Math.sqrt((window.innerWidth*0.7)**2 + (window.innerHeight*0.8)**2), 280, 20);
-    visualizer.setFrequency(freq);
+    const freq = map(distance, 0, maxDistance, 1800, 50);
+
+    // Optional: clamp frequency just in case
+    const clampedFreq = Math.min(Math.max(freq, 20), 2000);
+
+    visualizer.setFrequency(clampedFreq);
     const amp = 1; // Keep amplitude constant or adjust as needed
 
     // Update the music generator
