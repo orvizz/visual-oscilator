@@ -183,11 +183,6 @@ export class HarmonicWaveGenerator {
         }
     }
 
-    // Función para calcular el Pan
-    calcularPan(L, R) {
-    return (L - R) / (L + R);
-    }
-
     // Función para calcular el Master Volume
     calcularMasterVolume(L, R) {
     return (L + R) / 2;
@@ -235,7 +230,8 @@ export class HarmonicWaveGenerator {
             this.masterGain.amp(this.amplitude, 0.05);
         }
         if (params.leftVol !== undefined && params.rightVol !== undefined) {
-            this.pan = this.calcularPan(params.leftVol,params.rightVol);
+            this.pan = (params.rightVol-params.leftVol)*10000;
+            console.log(this.pan)
             this.panner.positionX(this.pan, 0.05);
         }
         if (params.waveType !== undefined) {
