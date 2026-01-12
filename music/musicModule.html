@@ -88,11 +88,11 @@
     </label>
 
     <label>Wave Type
-      <select id="waveType">
-        <option value="sine">Sine</option>
-        <option value="triangle">Triangle</option>
-        <option value="square">Square</option>
-        <option value="sawtooth">Sawtooth</option>
+      <select id="preset">
+        <option value="piano">Piano</option>
+        <option value="pluck">Gitar pluck</option>
+        <option value="pad">Pad</option>
+        <option value="lead">Lead synth</option>
       </select>
     </label>
 
@@ -120,7 +120,7 @@
     const ampSlider = document.getElementById('ampSlider');
     const leftSlider = document.getElementById('leftSlider');
     const rightSlider = document.getElementById('rightSlider');
-    const waveType = document.getElementById('waveType');
+    const preset = document.getElementById('preset');
     const echoToggle = document.getElementById('echoToggle');
     const vibratoToggle = document.getElementById('vibratoToggle');
     const startBtn = document.getElementById('startBtn');
@@ -132,7 +132,7 @@
             amplitude: parseFloat(ampSlider.value),
             leftVol: parseFloat(leftSlider.value),
             rightVol: parseFloat(rightSlider.value),
-            waveType: waveType.value,
+            preset: preset.value,
             echo: echoToggle.checked,
             vibrato: vibratoToggle.checked
         };
@@ -163,7 +163,7 @@
     ampSlider.oninput = updateGenerator;
     leftSlider.oninput = updateGenerator;
     rightSlider.oninput = updateGenerator;
-    waveType.onchange = updateGenerator;
+    preset.onchange = updateGenerator;
     echoToggle.onchange = updateGenerator;
     vibratoToggle.onchange = updateGenerator;
   </script>

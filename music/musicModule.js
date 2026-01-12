@@ -39,14 +39,12 @@ export class HarmonicWaveGenerator {
      */
     constructor({
         baseFreq = 220,
-        waveType = 'sine',
         amplitude = 0.5,
         pan = 0,
         echo = false,
         vibrato = false,
         numHarmonics = 5
     } = {}) {
-        this.waveType = waveType;
         this.amplitude = amplitude;
         this.pan = pan;
         this.echoEnabled = echo;
@@ -75,7 +73,7 @@ export class HarmonicWaveGenerator {
         this.harmonicGains = [];
         
         for (let i = 0; i < this.numHarmonics; i++) {
-            const osc = new p5.Oscillator(this.waveType);
+            const osc = new p5.Oscillator('sine');
             const gain = new p5.Gain();
             
             osc.disconnect();
@@ -87,12 +85,19 @@ export class HarmonicWaveGenerator {
             this.oscillators.push(osc);
             this.harmonicGains.push(gain);
         }
+        //Envelope
+        this.envelopePresets = {piano:{att:0.01,dec:0.1,sust:0.5,rel:0.5},pluck:{att:0.001,dec:0.2,sust:0.0,rel:0.2},pad:{att:0.2,dec:1.0,sust:0.7,rel:2.0},lead:{att:0.05,dec:0.1,sust:0.8,rel:0.1}}
+
+        this.envelope = new p5.Envelope();
+        this.envelope.setADSR(this.envelopePresets.pad.att, this.envelopePresets.pad.dec,this.envelopePresets.pad.sust, this.envelopePresets.pad.rel); 
+        this.envelope.setRange(1.0, 0.0); // Output range from 1.0 (full) to 0.0 (silent)
 
         // Create master gain and panner
         this.masterGain = new p5.Gain();
         this.panner = new p5.Panner3D();
         
-        this.masterGain.amp(this.amplitude);
+        this.masterGain.amp(0);//always on, but silent. the envelope triggers the sound
+        this.envelope.connect(this.masterGain.output.gain);
         this.panner.set(this.pan,0,0);
         
         // Connect harmonics to master gain
@@ -140,13 +145,13 @@ export class HarmonicWaveGenerator {
 
     /**
      * Update the waveform type for all oscillators
-     * @param {string} waveType - 'sine', 'triangle', 'square', or 'sawtooth'
+     * @param {string} preset - 'piano', 'pluck', 'pad', or 'lead'
      */
-    updateWaveType(waveType) {
-        this.waveType = waveType;
-        this.oscillators.forEach(osc => {
-            osc.setType(waveType);
-        });
+    updatePreset(preset) {
+        const p = this.envelopePresets[preset];
+        if (p) {
+            this.envelope.setADSR(p.att, p.dec, p.sust, p.rel);
+        }
     }
 
     /**
@@ -191,22 +196,26 @@ export class HarmonicWaveGenerator {
     /**
      * Start all oscillators
      */
-    start() {
+     start() {
+        const context = p5.prototype.getAudioContext();
+        if (context.state !== 'running') {
+            context.resume();
+        }
         this.oscillators.forEach(osc => {
-            osc.start();
+            if(!osc.started) osc.start();
         });
+        if (this.vibratoOsc && !this.vibratoOsc.started) {
+            this.vibratoOsc.start();
+        }
+        this.envelope.triggerAttack();
+        console.log(this)
     }
 
     /**
      * Stop all oscillators and effects
      */
     stop() {
-        this.oscillators.forEach(osc => {
-            osc.stop();
-        });
-        if (this.vibratoOsc && this.vibratoOsc.started) {
-            this.vibratoOsc.stop();
-        }
+        this.envelope.triggerRelease();
     }
 
     /**
@@ -227,15 +236,17 @@ export class HarmonicWaveGenerator {
         if (params.amplitude !== undefined) {
             this.amplitude = params.amplitude;
             // Smooth amplitude changes with ramp time
-            this.masterGain.amp(this.amplitude, 0.05);
+            for (let i = 0; i < this.harmonicGains.length; i++) {
+                let targetAmp = this.harmonicData[i].amp * this.amplitude;
+                this.harmonicGains[i].amp(targetAmp, 0.05);
+            }
         }
         if (params.leftVol !== undefined && params.rightVol !== undefined) {
             this.pan = (params.rightVol-params.leftVol)*10000;
-            console.log(this.pan)
             this.panner.positionX(this.pan, 0.05);
         }
-        if (params.waveType !== undefined) {
-            this.updateWaveType(params.waveType);
+        if (params.preset !== undefined) {
+            this.updatePreset(params.preset);
         }
         if (params.echo !== undefined) {
             this.toggleEcho(params.echo);
