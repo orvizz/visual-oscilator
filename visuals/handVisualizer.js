@@ -74,6 +74,10 @@ export class HandVisualizer {
         this.currentFreq = freq;
     }
 
+    setAmplitude(amp) {
+        this.currentAmp = amp;
+    }
+
     setWaveType(waveType) {
         this.currentWaveType = waveType;
     }

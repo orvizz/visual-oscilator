@@ -95,6 +95,7 @@ function handleHandDataUpdate(data) {
 
     const amplitude = Math.max(leftVolClamped, rightVolClamped);
 
+    visualizer.setAmplitude(amplitude);
     // Update the music generator
     generator.update({
         baseFreq: freq,
