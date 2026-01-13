@@ -60,7 +60,11 @@ function handleHandDataUpdate(data) {
 
 
     // Map distance to frequency and amplitude
-    const freq = map(distance, 0, maxDistance, 1800, 50);
+    function mapLog(value, inMin, inMax, outMin, outMax) {
+        const norm = (value - inMin) / (inMax - inMin);
+        return outMin * Math.pow(outMax / outMin, norm);
+    }
+    const freq = mapLog(distance, 0, maxDistance, 1046, 55);
 
     // Optional: clamp frequency just in case
     const clampedFreq = Math.min(Math.max(freq, 20), 2000);
