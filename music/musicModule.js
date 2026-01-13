@@ -196,7 +196,7 @@ export class HarmonicWaveGenerator {
     /**
      * Start all oscillators
      */
-     start() {
+    start() {
         const context = p5.prototype.getAudioContext();
         if (context.state !== 'running') {
             context.resume();

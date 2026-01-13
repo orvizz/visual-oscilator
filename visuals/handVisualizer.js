@@ -229,7 +229,7 @@ export class HandVisualizer {
      */
 
     drawWave(c1, c2, amp, distance) {
-        const steps = 100;
+        const steps = 1000;
         const t = frameCount * 0.01; // animation speed
         const vx = (c2.x - c1.x) / steps;
         const vy = (c2.y - c1.y) / steps;

@@ -7,7 +7,7 @@ let soundOff=true;
 let waveType="sine";
 let waveTypes=["sine", "custom", "triangle","square","sawtooth"];
 let currentWaveTypeIndex=0;
-
+let preset=0;
 /**
  * Initialize and start the hand tracking with audio generation
  */
@@ -70,12 +70,37 @@ function handleHandDataUpdate(data) {
     const clampedFreq = Math.min(Math.max(freq, 20), 2000);
 
     visualizer.setFrequency(clampedFreq);
-    const amp = 1; // Keep amplitude constant or adjust as needed
+
+    /* =========================
+    PAN → LEFT / RIGHT
+    ========================= */
+
+     // Altura normalizada → volumen por lado
+    const leftVol = center1
+        ? 1 - (center1.y / window.innerHeight)
+        : 0;
+
+    const rightVol = center2
+        ? 1 - (center2.y / window.innerHeight)
+        : 0;
+
+    // Clamp de seguridad
+    const leftVolClamped = Math.min(Math.max(leftVol, 0), 1);
+    const rightVolClamped = Math.min(Math.max(rightVol, 0), 1);
+
+    /* =========================
+    AMPLITUD GLOBAL
+    Mano más alta gana
+    ========================= */
+
+    const amplitude = Math.max(leftVolClamped, rightVolClamped);
 
     // Update the music generator
     generator.update({
         baseFreq: freq,
-        amplitude: amp,
+        amplitude: amplitude,
+        leftVol: leftVolClamped,
+        rightVol: rightVolClamped
     });
 }
 
