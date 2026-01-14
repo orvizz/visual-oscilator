@@ -93,8 +93,8 @@ function handleHandDataUpdate(data) {
     Mano más alta gana
     ========================= */
 
-    const amplitude = Math.max(leftVolClamped, rightVolClamped);
-
+    const amplitude = Math.min(leftVolClamped, rightVolClamped) * 5;
+    
     visualizer.setAmplitude(amplitude);
     // Update the music generator
     generator.update({

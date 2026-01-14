@@ -50,10 +50,10 @@ export class HarmonicWaveGenerator {
         this.echoEnabled = echo;
         this.vibratoEnabled = vibrato;
         this.baseFreq = baseFreq;
-        
+
         // Clamp number of harmonics to reasonable range
         this.numHarmonics = Math.max(1, Math.min(8, numHarmonics));
-        
+
         // Define harmonic series with amplitude rolloff for pleasant sound
         // Using overtone series: f, 2f, 3f, 4f, 5f, 6f, 7f, 8f
         // With decreasing amplitudes for natural timbre
@@ -71,58 +71,58 @@ export class HarmonicWaveGenerator {
         // Create oscillators for each harmonic
         this.oscillators = [];
         this.harmonicGains = [];
-        
+
         for (let i = 0; i < this.numHarmonics; i++) {
             const osc = new p5.Oscillator('sine');
             const gain = new p5.Gain();
-            
+
             osc.disconnect();
             osc.freq(this.baseFreq * this.harmonicData[i].ratio);
             gain.amp(this.harmonicData[i].amp);
-            
+
             osc.connect(gain);
-            
+
             this.oscillators.push(osc);
             this.harmonicGains.push(gain);
         }
         //Envelope
-        this.envelopePresets = {piano:{att:0.01,dec:0.1,sust:0.5,rel:0.5},pluck:{att:0.001,dec:0.2,sust:0.0,rel:0.2},pad:{att:0.2,dec:1.0,sust:0.7,rel:2.0},lead:{att:0.05,dec:0.1,sust:0.8,rel:0.1}}
+        this.envelopePresets = { piano: { att: 0.01, dec: 0.1, sust: 0.5, rel: 0.5 }, pluck: { att: 0.001, dec: 0.2, sust: 0.0, rel: 0.2 }, pad: { att: 0.2, dec: 1.0, sust: 0.7, rel: 2.0 }, lead: { att: 0.05, dec: 0.1, sust: 0.8, rel: 0.1 } }
 
         this.envelope = new p5.Envelope();
-        this.envelope.setADSR(this.envelopePresets.pad.att, this.envelopePresets.pad.dec,this.envelopePresets.pad.sust, this.envelopePresets.pad.rel); 
+        this.envelope.setADSR(this.envelopePresets.pad.att, this.envelopePresets.pad.dec, this.envelopePresets.pad.sust, this.envelopePresets.pad.rel);
         this.envelope.setRange(1.0, 0.0); // Output range from 1.0 (full) to 0.0 (silent)
 
         // Create master gain and panner
         this.masterGain = new p5.Gain();
         this.panner = new p5.Panner3D();
-        
+
         this.masterGain.amp(0);//always on, but silent. the envelope triggers the sound
         this.envelope.connect(this.masterGain.output.gain);
-        this.panner.set(this.pan,0,0);
-        
+        this.panner.set(this.pan, 0, -3);
+
         // Connect harmonics to master gain
         this.harmonicGains.forEach(gain => {
             gain.connect(this.masterGain);
         });
-        
+
         // Master gain -> panner -> output
         this.masterGain.connect(this.panner);
-        
+
         // Optional delay effect
         this.delay = new p5.Delay();
         this.delay.process(this.panner, 0.12, 0.7, 2300);
         this.delay.disconnect(); // Start disconnected
-        
+
         if (this.echoEnabled) {
             this.delay.connect();
         }
-        
+
         // Optional vibrato
         this.vibratoOsc = new p5.Oscillator('sine');
         this.vibratoOsc.freq(5); // 5 Hz vibrato rate
         this.vibratoOsc.amp(8);  // ±8 Hz vibrato depth
         this.vibratoOsc.disconnect();
-        
+
         if (this.vibratoEnabled) {
             this.oscillators.forEach(osc => {
                 this.vibratoOsc.connect(osc.freq);
@@ -190,8 +190,8 @@ export class HarmonicWaveGenerator {
 
     // Función para calcular el Master Volume
     calcularMasterVolume(L, R) {
-    return (L + R) / 2;
-    } 
+        return (L + R) / 2;
+    }
 
     /**
      * Start all oscillators
@@ -202,12 +202,13 @@ export class HarmonicWaveGenerator {
             context.resume();
         }
         this.oscillators.forEach(osc => {
-            if(!osc.started) osc.start();
+            if (!osc.started) osc.start();
         });
         if (this.vibratoOsc && !this.vibratoOsc.started) {
             this.vibratoOsc.start();
         }
         this.envelope.triggerAttack();
+
         console.log(this)
     }
 
@@ -242,8 +243,21 @@ export class HarmonicWaveGenerator {
             }
         }
         if (params.leftVol !== undefined && params.rightVol !== undefined) {
-            this.pan = (params.rightVol-params.leftVol)*10000;
-            this.panner.positionX(this.pan, 0.05);
+
+            const l = Math.max(0, params.leftVol);
+            const r = Math.max(0, params.rightVol);
+
+            const sum = l + r || 1; // avoid division by zero
+            const pan = (r - l) / sum; // normalized difference
+
+            const angle = pan * Math.PI / 2; // semicircle
+            const radius = 3;
+
+            const x = Math.sin(angle) * radius;
+            const z = -Math.cos(angle) * radius;
+
+            this.panner.positionX(x, 0.03);
+            this.panner.positionZ(z, 0.03);
         }
         if (params.preset !== undefined) {
             this.updatePreset(params.preset);
