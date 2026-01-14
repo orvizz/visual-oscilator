@@ -4,6 +4,13 @@
 
 #set page(
   margin: (top: 2.5cm, bottom: 2.5cm, left: 3cm, right: 3cm),
+  footer: context {
+    let i = counter(page).at(here()).at(0)
+    if i > 1 {
+      set align(center)
+      counter(page).display()
+    }
+  },
 )
 
 #set text(
@@ -80,6 +87,7 @@
 )
 
 #pagebreak()
+#counter(page).update(1)
 
 // ===============================
 // 1. ¿Qué se ha hecho?  (≈ 1 página)
