@@ -258,15 +258,8 @@ Posibles apartados:
 
 = Referencias <referencias>
 
-- Documentación oficial de las tecnologías utilizadas
-- Tutoriales / artículos que fueron clave
-- Repositorios de inspiración (si los hubo)
-- Libros / capítulos relevantes de la asignatura (si procede)
-
-Ejemplo de formato:
-
 #list(
-  [*Next.js* — #link("https://nextjs.org/docs")],
-  [*Tailwind CSS* — #link("https://tailwindcss.com/docs")],
-  [Capítulo 5 — Arquitecturas Web Modernas — Apuntes SIW],
+  [*Mediapipe hands* — #link("https://chuoling.github.io/mediapipe/solutions/hands.html")],
+  [*P5.js* — #link("https://p5js.org/reference/")],
+  [*P5.sound* — #link("https://p5js.org/reference/p5.sound/")],
 )
