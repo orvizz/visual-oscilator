@@ -71,15 +71,14 @@
   #v(0.6cm)
 
   #text(size: 12pt)[
-    Sistemas de Información para la Web \
-    Grado de ingeniería informática del software \
-    Universidad: Universidad de oviedo
+    Grado de Ingeniería Informática del Software \
+    Universidad de Oviedo
   ]
 
   #v(1.5cm)
 
   #text(weight: "semibold")[
-    Mario Orviz Viesca - UO295180 \ 
+    Mario Orviz Viesca \
     Sergio Riesco Collar \
     Javier Carrasco Arango
   ]
@@ -116,6 +115,11 @@ El proyecto está pensado como exposición interactiva, por lo que está diseña
 
 Debido a su uso intuitivo, se ha optado por no indicar las instrucciones de uso directamente en la interfaz a favor de una apariencia más limpia y minimalista. Al elevar las manos hacia la pantalla, verán que aparecen con una forma, y una vez que se pueden ver dos manos, una onda las conecta y genera un sonido que depende de la posición de esas manos. La gracia es que esas dos manos no tienen porqué pertenecer a una misma persona, y la cámara está dispuesta adrede para obligar a realizar movimientos exagerados para mayores cambios, a fin de que se trate de una experiencia más bien entretenida y poco exigente. 
 
+El proyecto pretende aportar una forma sencilla e original de utilizar la visión por computador para crear una experiencia que los usuarios no técnicos puedan entender y disfrutar sin necesidad de conocimientos previos.
+
+Dado que no nos dedicamos profesionalmente a el ámbito de la música y el sonido, hemos optado por un enfoque más experimental y lúdico, en lugar de buscar una precisión musical estricta. 
+
+
 Los detalles completos de cada mecánica del instrumento están explicados en detalle en la sección @uso más adelante.
 
 #v(1fr)
@@ -132,6 +136,8 @@ Dado que se nos pidió un software que modelase una instalación artística, con
 Nuestra idea inicial era, dado el espacio abierto típico de una exposición y la naturaleza del ir y venir de los asistentes, un instrumento sencillo interactivo sería un punto de interés para los asistentes de todas las edades. La idea sería que fueran atraidos a la exposición por el sonido o movimientos que realizaran otros usuarios, y probaran ellos mismos.
 
 El objetivo del proyecto es ofrecer una experiencia de exploración y experimentación de las reglas del instrumento, que prueben a interactuar con la cámara y descubran cómo influencia al sonido, y que con eso, intenten hacer algo de música.
+
+Además de esto, la elección de este proyecto se debe, principalmente, a nuestro interés por explorar nuevas tecnologías y áreas de conocimiento, como la visión por computador y la síntesis de audio en tiempo real. Creemos que este proyecto nos ha permitido adquirir habilidades valiosas y ampliar nuestro conocimiento en estos campos, que son cada vez más relevantes en el ámbito de la informática audiovisual.
 
 #v(1fr)
 #pagebreak()
