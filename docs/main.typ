@@ -33,7 +33,7 @@
   #v(1.5cm)
 
   #text(size: 18pt, weight: "bold")[
-    Memoria del Proyecto
+    Documentación del proyecto
   ]
 
   #v(0.8cm)
@@ -45,23 +45,24 @@
   #v(1.2cm)
 
   #text(weight: "bold", size: 14pt)[
-    Título del proyecto
+    Oscilador visual
   ]
 
   #v(0.6cm)
 
   #text(size: 12pt)[
-    Asignatura: Sistemas de Información para la Web \
-    Grado / Máster: [Nombre del grado] \
-    Universidad: [Nombre de la universidad]
+    Sistemas de Información para la Web \
+    Grado de ingeniería informática del software \
+    Universidad: Universidad de oviedo
   ]
 
   #v(1.5cm)
 
   #text(weight: "semibold")[
-    Alumno/a: [Tu nombre] \
-    Curso: [Curso académico] \
-    Fecha: [Fecha de entrega]
+    Alumnos: \ 
+    Mario Orviz Viesca \
+    Sergio Riesco Collar \
+    Javier Carrasco Arango
   ]
 
   #v(2cm)
@@ -85,23 +86,25 @@
 // 1. ¿Qué se ha hecho?  (≈ 1 página)
 // ===============================
 
-= ¿Qué se ha hecho?
+= ¿Qué se ha hecho? <que>
 
-Breve descripción general del proyecto entregado: qué tipo de aplicación/web se ha desarrollado, cuál es su propósito principal en una sola frase y qué funcionalidades clave ofrece al usuario final.
+Este proyecto se trata de un instrumento virtual interactivo, similar en concepto a un theremin y un acordeón.
 
-Ejemplos de aspectos a incluir:
-- Tipo de proyecto (web app, API + frontend, sitio estático con CMS, Progressive Web App, etc.)
-- Tecnologías principales utilizadas (stack tecnológico resumido)
-- Público objetivo / usuarios finales previstos
-- Enlace al proyecto online (si está desplegado): #link("https://tu-proyecto.vercel.app")[https://tu-proyecto.vercel.app]
+Se trata de una página web estática, hecha puramente con html, css y javascript, por lo que su despliegue, que se detallará más adelante, es trivial. Por el mismo motivo, el proyecto ocupa muy poco espacio y es ligero.
+
+El proyecto está pensado como exposición interactiva, por lo que está diseñado para su uso de continuo, sin pausas. En una exposición, los usuarios se acercarían a la pantalla o proyección y mirarían a la cámara, donde verían un rectángulo con un título explicativo, y a ellos mismos en la pantalla.
+
+Debido a su uso intuitivo, se ha optado por no indicar las instrucciones de uso directamente en la interfaz a favor de una apariencia más limpia y minimalista. Al elevar las manos hacia la pantalla, verán que aparecen con una forma, y una vez que se pueden ver dos manos, una onda las conecta y genera un sonido.
+Los detalles completos de cada mecánica del instrumento están explicados en detalle en la sección @uso más adelante.
 
 #v(1fr)
 
+#pagebreak()
 // ===============================
 // 2. ¿Por qué? ¿Para qué?  (≈ 1 página)
 // ===============================
 
-= ¿Por qué? ¿Para qué?
+= ¿Por qué? ¿Para qué? <porque>
 
 Explicación del problema u oportunidad que se ha querido resolver o cubrir con este proyecto.
 
@@ -114,11 +117,12 @@ Incluye:
 
 #v(1fr)
 
+#pagebreak()
 // ===============================
 // 3. ¿Cómo se ha hecho?  (≈ 2–3 páginas)
 // ===============================
 
-= ¿Cómo se ha hecho?
+= ¿Cómo se ha hecho? <como>
 
 Descripción técnica detallada del desarrollo.
 
@@ -153,11 +157,12 @@ Ejemplos:
 
 #v(0.8fr)
 
+#pagebreak()
 // ===============================
 // 4. ¿Cómo se usa?  (≈ 1 página)
 // ===============================
 
-= ¿Cómo se usa?
+= ¿Cómo se usa? <uso>
 
 Guía rápida de uso para un usuario nuevo.
 
@@ -168,12 +173,12 @@ Incluye:
 - Requisitos mínimos (navegador, conexión…)
 
 #v(1fr)
-
+#pagebreak()
 // ===============================
 // 5. ¿Qué hemos aprendido?  (≈ 1–2 páginas)
 // ===============================
 
-= ¿Qué hemos aprendido?
+= ¿Qué hemos aprendido? <aprendizaje>
 
 Reflexión personal y técnica tras haber realizado el proyecto.
 
@@ -197,12 +202,12 @@ Posibles apartados:
 ¿Ha merecido la pena? ¿Lo volverías a hacer de forma diferente? ¿Qué te llevas para tu futuro profesional?
 
 #v(1fr)
-
+#pagebreak()
 // ===============================
 // Referencias / Bibliografía
 // ===============================
 
-= Referencias
+= Referencias <referencias>
 
 - Documentación oficial de las tecnologías utilizadas
 - Tutoriales / artículos que fueron clave
@@ -216,7 +221,3 @@ Ejemplo de formato:
   [*Tailwind CSS* — #link("https://tailwindcss.com/docs")],
   [Capítulo 5 — Arquitecturas Web Modernas — Apuntes SIW],
 )
-
-#pagebreak()
-
-Gracias por la atención.
