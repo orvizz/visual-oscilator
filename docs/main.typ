@@ -26,6 +26,7 @@
 #set text(
   size: 12pt,
   lang: "es",
+  font: "Lucida Sans Unicode",
 )
 
 #set par(
@@ -38,6 +39,8 @@
 )
 
 #set quote(block: true)
+
+
 
 #show heading.where(level: 1): set text(size: 14pt, weight: "bold")
 #show heading.where(level: 2): set text(size: 13pt, weight: "semibold")
