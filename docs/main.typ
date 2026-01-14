@@ -192,6 +192,7 @@ La lógica del sistema está distribuida de forma modular para facilitar el mant
 
 == Decisiones técnicas importantes
 
+TODO
 Ejemplos:
 - ¿Por qué elegiste X en lugar de Y? (React vs Vue, REST vs GraphQL, SQL vs NoSQL…)
 - Autenticación / autorización
@@ -202,6 +203,7 @@ Ejemplos:
 
 == Dificultades técnicas encontradas y cómo se resolvieron
 
+TODO
 (Principalmente las más relevantes para la asignatura)
 
 #v(0.8fr)
@@ -213,6 +215,7 @@ Ejemplos:
 
 = ¿Cómo se usa? <uso>
 
+TODO
 Guía rápida de uso para un usuario nuevo.
 
 Incluye:
@@ -228,19 +231,20 @@ Incluye:
 // ===============================
 
 = ¿Qué hemos aprendido? <aprendizaje>
-
+TODO
 Reflexión personal y técnica tras haber realizado el proyecto.
 
 Posibles apartados:
 
 == Aprendizajes técnicos
-
+TODO
 - Nuevas tecnologías / patrones aprendidos
 - Conceptos de SIW que se han entendido mejor al aplicarlos
 - Buenas prácticas descubiertas (o errores que no volverías a cometer)
 
 == Aprendizajes transversales
 
+TODO
 - Gestión del tiempo
 - Trabajo en equipo (si aplica)
 - Comunicación con cliente/usuario imaginario
@@ -248,6 +252,7 @@ Posibles apartados:
 
 == Valoración global
 
+TODO
 ¿Ha merecido la pena? ¿Lo volverías a hacer de forma diferente? ¿Qué te llevas para tu futuro profesional?
 
 #v(1fr)
