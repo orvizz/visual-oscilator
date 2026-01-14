@@ -1,0 +1,47 @@
+@startuml A1
+skinparam componentStyle uml2
+skinparam monochrome true
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+title Arquitectura de Componentes (Nivel A1)
+
+
+node "Hardware" {
+    [Cámara] as Cam
+}
+
+package "Oscilador visual" {
+    [Orquestador] as Orq
+    [Interfaz de Usuario (p5.js)] as UI
+    [Generador de Sonido (p5js sound)] as Audio
+
+    rectangle "Módulo de Visión y Efectos" {
+        component "HandVisualizer" {
+            [Reconocimiento (MediaPipe)] as Rec
+            [Efectos (Ondas)] as GFX
+        }
+    }
+}
+
+' Flujos de datos y control
+Cam -down-> Rec : Frames de video
+
+' El reconocimiento alimenta a los efectos y estos al orquestador
+Rec -right-> GFX : Coordenadas (x, y)
+GFX -right-> Orq : onHandDataUpdate (datos brutos)
+
+' El orquestador distribuye el control
+Orq -left-> GFX : setFrequency / setAmplitude
+Orq -down-> Audio : update (parámetros de audio)
+
+' La interfaz visualiza el conjunto
+GFX -down-> UI : Renderizado en Canvas
+
+note bottom of Orq
+  Lógica de negocio:
+  Mapeo de distancias a frecuencias
+  y gestión del estado del sonido.
+end note
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml A0
+skinparam monochrome true
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+title Vista general de la arquitectura A0
+
+rectangle "ENTRADA" {
+    [Cámara] as Cam
+}
+
+rectangle "SISTEMA" {
+    [Orquestador] as Orq
+    [Módulo de Sonido] as Audio
+    package "Modulo de visión" {
+        [Visión y Reconocimiento] as Vision
+        [Efectos Visuales] as GFX
+    }
+    [Interfaz visual] as UI
+}
+
+' Conexiones simplificadas
+Cam --> Vision
+Vision --> Orq
+Orq --> Audio
+Orq --> GFX
+GFX --> UI
+
+@enduml
