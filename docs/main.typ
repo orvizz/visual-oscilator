@@ -393,4 +393,8 @@ Estamos bastante satisfechos con el resultado final del producto, aunque somos c
   [*Mediapipe hands* — #link("https://chuoling.github.io/mediapipe/solutions/hands.html")],
   [*P5.js* — #link("https://p5js.org/reference/")],
   [*P5.sound* — #link("https://p5js.org/reference/p5.sound/")],
+  [*Proyecto desplegado en GitHub Pages* — #link("https://orvizz.github.io/visual-oscilator/")],
+  [*Link al repositorio de GitHub* — #link("https://github.com/orvizz/visual-oscilator")],
+  [*Video demostrativo del proyecto* — #link("https://unioviedo-my.sharepoint.com/:v:/g/personal/uo294532_uniovi_es/IQC38gUsLBeiR5Ed474XbiTxAS534t6LgNtpgKzLYOVQV1U?e=q7a6GD&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D")[aquí]],
+  [*Video demostrativo de despliegue* — #link("https://unioviedo-my.sharepoint.com/:v:/g/personal/uo294532_uniovi_es/IQCyDUIxV0jWRq5N303zGbg_AU8f8L51sQyggERrpvt2F6w?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=zbV3Bm")[aquí]],
 )
