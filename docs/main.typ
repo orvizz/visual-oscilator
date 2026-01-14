@@ -59,7 +59,6 @@
   #v(1.5cm)
 
   #text(weight: "semibold")[
-    Alumnos: \ 
     Mario Orviz Viesca \
     Sergio Riesco Collar \
     Javier Carrasco Arango
@@ -111,12 +110,7 @@ Dado que se nos pidió un software que modelase una instalación artística, con
 
 Nuestra idea inicial era, dado el espacio abierto típico de una exposición y la naturaleza del ir y venir de los asistentes, un instrumento sencillo interactivo sería un punto de interés para los asistentes de todas las edades. La idea sería que fueran atraidos a la exposición por el sonido o movimientos que realizaran otros usuarios, y probaran ellos mismos.
 
-Incluye:
-- Contexto / motivación (personal, académico, social, empresarial…)
-- Objetivo general del proyecto
-- Objetivos específicos (3–6 puntos concretos)
-- ¿Qué valor aporta? ¿Qué mejora respecto a soluciones existentes?
-- Relación con los contenidos de la asignatura SIW
+El objetivo del proyecto es ofrecer una experiencia de exploración y experimentación de las reglas del instrumento, que prueben a interactuar con la cámara y descubran cómo influencia al sonido, y que con eso, intenten hacer algo de música.
 
 #v(1fr)
 
@@ -127,24 +121,38 @@ Incluye:
 
 = ¿Cómo se ha hecho? <como>
 
-Descripción técnica detallada del desarrollo.
+El proyecto se ha desarrollado primero haciendo un diseño conceptual y definiendo las reglas por las que el instrumento se regiría, y luego separando la lógica en diferentes módulos o secciones para su desarrollo.
 
-== 3.1. Arquitectura general
+Se avanzó en el proyecto tanto en el tiempo disponible en el aula como de forma autónoma en casa, por lo que se utilizó un repositorio en GitHub así como técnicas de branching.
 
-Diagrama de alto nivel (frontend, backend, base de datos, servicios externos, etc.)
+== Arquitectura general
 
-== 3.2. Tecnologías y herramientas utilizadas
+La arquitectura del proyecto ha sufrido cambios conforme ha avanzado el desarrollo, y acabó siendo centralizado el flujo de los datos y lógica de negocio en un nodo de control, el orquestador. En la @fig-A0 se presenta el diagrama de bloques que describe la organización de alto nivel del sistema.
+
+#figure(
+  image("diagrams/out/A0diagram/A0.svg", width: 85%),
+  caption: [Vista general de la arquitectura (Nivel A0).],
+) <fig-A0>
+
+El diagrama de nivel A1 (ver @fig-A1) detalla la implementación técnica del sistema dentro del entorno de ejecución, especificando las librerías externas y la comunicación entre objetos, así como el papel del orquestador como coordinador y poseedor de la lógica de negocio.
+
+#figure(
+  image("diagrams/out/A1diagram/A1.svg"),
+  caption: [Arquitectura de componentes del sistema (Nivel A1).],
+) <fig-A1>
+
+== Tecnologías y herramientas utilizadas
 
 - Lenguajes / frameworks
 - Librerías principales
 - Herramientas de desarrollo (Vite, npm/pnpm, Docker, etc.)
 - Servicios externos (Firebase, Supabase, Vercel, Cloudinary, Stripe…)
 
-== 3.3. Estructura del proyecto
+== Estructura del proyecto
 
 Breve explicación de la organización de carpetas (src/, components/, pages/, api/, etc.)
 
-== 3.4. Decisiones técnicas importantes
+== Decisiones técnicas importantes
 
 Ejemplos:
 - ¿Por qué elegiste X en lugar de Y? (React vs Vue, REST vs GraphQL, SQL vs NoSQL…)
@@ -154,7 +162,7 @@ Ejemplos:
 - SEO / rendimiento / accesibilidad
 - Despliegue y CI/CD
 
-== 3.5. Dificultades técnicas encontradas y cómo se resolvieron
+== Dificultades técnicas encontradas y cómo se resolvieron
 
 (Principalmente las más relevantes para la asignatura)
 
@@ -187,20 +195,20 @@ Reflexión personal y técnica tras haber realizado el proyecto.
 
 Posibles apartados:
 
-== 5.1. Aprendizajes técnicos
+== Aprendizajes técnicos
 
 - Nuevas tecnologías / patrones aprendidos
 - Conceptos de SIW que se han entendido mejor al aplicarlos
 - Buenas prácticas descubiertas (o errores que no volverías a cometer)
 
-== 5.2. Aprendizajes transversales
+== Aprendizajes transversales
 
 - Gestión del tiempo
 - Trabajo en equipo (si aplica)
 - Comunicación con cliente/usuario imaginario
 - Debugging en producción
 
-== 5.3. Valoración global
+== Valoración global
 
 ¿Ha merecido la pena? ¿Lo volverías a hacer de forma diferente? ¿Qué te llevas para tu futuro profesional?
 
