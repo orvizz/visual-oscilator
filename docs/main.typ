@@ -143,14 +143,44 @@ El diagrama de nivel A1 (ver @fig-A1) detalla la implementación técnica del si
 
 == Tecnologías y herramientas utilizadas
 
-- Lenguajes / frameworks
-- Librerías principales
-- Herramientas de desarrollo (Vite, npm/pnpm, Docker, etc.)
-- Servicios externos (Firebase, Supabase, Vercel, Cloudinary, Stripe…)
+El proyecto hace uso de las siguientes tecnologías:
+- Html, javascript y css
+- p5.js y p5 sound library
+- Mediapipe hands library
+
+== División del proyecto
+
+El diseño y desarrollo se realizó a partes iguales por los tres integrantes del equipo:
+- El diseño fue puesto en común, aportado y llevado a consenso por todos los integrantes.
+- El aspecto visual del sistema fue realizado principalmente por Sergio.
+- El módulo de sonido fue realizado principalmente por Javier, con ayuda de Mario y Sergio.
+- El módulo visual y de reconocimiento de las manos fue realizado principalmente por Mario, con ayuda de Javier y de Sergio. 
 
 == Estructura del proyecto
 
-Breve explicación de la organización de carpetas (src/, components/, pages/, api/, etc.)
+El proyecto se organiza en una estructura de directorios que separa la documentación técnica y los activos de diseño del código fuente lógico y funcional. A continuación se detallan los componentes principales:
+
+=== Documentación y Diagramas (`/docs`)
+Esta carpeta centraliza el material gráfico y el documento principal de la memoria:
+- *`/diagramas/out`*: Contiene las versiones finales exportadas en formato SVG de los diagramas A0 y A1 para su inclusión en el PDF.
+- *`/diagramas/src`*: Almacena el código fuente original en PlantUML (`.puml`), permitiendo la edición y mantenimiento de la arquitectura.
+- *`main.typ`*: Archivo fuente de Typst utilizado para generar la memoria técnica.
+- *`main.pdf`*: Documento final compilado.
+
+=== Código Fuente de la Aplicación
+La lógica del sistema está distribuida de forma modular para facilitar el mantenimiento:
+
+- *Raíz del Proyecto*:
+  - `index.html`: Punto de entrada de la aplicación web, e importación de librerías.
+  - `hand-wave-visualizer.css`: Define los estilos visuales y el layout de la interfaz visual de la aplicación.
+  - `main.js`: Punto de entrada de la aplicación; utiliza la función `setup()` de p5.js para inicializar el orquestador.
+  - `orchestrator.js`: Actúa como mediador entre los módulos de visión y sonido, gestionando el flujo de datos y la lógica de negocio.
+  - `README.md`: Documentación básica para la instalación y ejecución del software.
+- *`/music`*: 
+  - `musicModule.js`: Contiene la lógica de síntesis de audio (osciladores, envolventes y generación de ondas).
+  - `musicModule.html`: Interfaz visual sencilla para la prueba del módulo de audio.
+- *`/visuals`*:
+  - `handVisualizer.js`: Implementa la clase encargada del reconocimiento de manos mediante MediaPipe y la renderización de efectos visuales con p5.js.
 
 == Decisiones técnicas importantes
 
