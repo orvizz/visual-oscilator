@@ -13,9 +13,20 @@
   },
 )
 
+// Definición del estilo de recuadro (puedes poner esto al inicio de tu archivo)
+#let nota(titulo, cuerpo) = rect(
+  fill: rgb("#f8f9fa"), 
+  stroke: (left: 4pt + blue.darken(20%)), 
+  inset: 15pt,
+  width: 100%
+)[
+  *#titulo* \ #cuerpo
+]
+
 #set text(
   size: 12pt,
   lang: "es",
+  font: "Lucida Sans Unicode",
 )
 
 #set par(
@@ -28,6 +39,8 @@
 )
 
 #set quote(block: true)
+
+
 
 #show heading.where(level: 1): set text(size: 14pt, weight: "bold")
 #show heading.where(level: 2): set text(size: 13pt, weight: "semibold")
@@ -46,7 +59,7 @@
   #v(0.8cm)
 
   #text(size: 15pt)[
-    Sistemas de Información para la Web
+    Informática Audiovisual
   ]
 
   #v(1.2cm)
@@ -66,7 +79,7 @@
   #v(1.5cm)
 
   #text(weight: "semibold")[
-    Mario Orviz Viesca \
+    Mario Orviz Viesca - UO295180 \ 
     Sergio Riesco Collar \
     Javier Carrasco Arango
   ]
@@ -121,7 +134,6 @@ Nuestra idea inicial era, dado el espacio abierto típico de una exposición y l
 El objetivo del proyecto es ofrecer una experiencia de exploración y experimentación de las reglas del instrumento, que prueben a interactuar con la cámara y descubran cómo influencia al sonido, y que con eso, intenten hacer algo de música.
 
 #v(1fr)
-
 #pagebreak()
 // ===============================
 // 3. ¿Cómo se ha hecho?  (≈ 2–3 páginas)
@@ -192,34 +204,140 @@ La lógica del sistema está distribuida de forma modular para facilitar el mant
 
 == Decisiones técnicas importantes
 
-Ejemplos:
-- ¿Por qué elegiste X en lugar de Y? (React vs Vue, REST vs GraphQL, SQL vs NoSQL…)
-- Autenticación / autorización
-- Gestión del estado
-- Manejo de formularios
-- SEO / rendimiento / accesibilidad
-- Despliegue y CI/CD
+
+Para realizar este proyecto, se decidió utilizar p5.js como framework principal para la gestión del canvas y la interacción con la cámara, debido a su facilidad de uso y su integración con la librería p5.sound, que facilitó enormemente la generación de audio en tiempo real.
+
+Antes de decidirse por p5.js, se consideraron otras opciones como Processing, pero finalmente nos decantamos por p5.js debido a su fácil integreación con tecnologías de visión por computador como MediaPipe, que fue crucial para el reconocimiento de las manos.
+
+Además, no se utilizó ningún framework de frontend como React o Vue, ya que el proyecto no requería una interfaz de usuario compleja ni una gestión avanzada del estado. En su lugar, se optó por una estructura más sencilla y directa utilizando HTML, CSS y JavaScript.
+
+Otro punto a favor de las tecnologías elegidas fue la facilidad de despliegue, ya que al tratarse de una aplicación web estática, se puede alojar en cualquier servidor web sin necesidad de configuraciones adicionales.
+
+Para realizar el despliegue, se optó por GitHub Pages debido a su simplicidad y gratuidad para proyectos estáticos, lo que permitió una rápida puesta en marcha y acceso público al proyecto.
+
+De todas formas, se consideraron otras opciones de despliegue como Azure, pero finalmente se decidió por GitHub Pages por su integración directa con el repositorio del proyecto y su simplicidad.
 
 == Dificultades técnicas encontradas y cómo se resolvieron
 
-(Principalmente las más relevantes para la asignatura)
+En las siguientes secciones se describen algunas de las dificultades técnicas más relevantes encontradas durante el desarrollo del proyecto y las soluciones implementadas para superarlas.
 
-#v(0.8fr)
+=== Dificultad 1: Latencia en el reconocimiento de manos
 
+Una dificultad técnica importante fue la latencia en la captura de vídeo y el procesamiento de las manos, que afectaba a la experiencia del usuario. Para mitigar este problema, se optimizó el código de reconocimiento, descartando valores no necesarios aportados por MediaPipe y tratando de reducir la carga computacional en cada frame.
+
+=== Dificultad 2: Espacio dimensional y mapeo de coordenadas
+
+Al principio, resultó complicado trabajar con coordenadas 3D. Era la idea original, ya que MediaPipe proporciona coordenadas en 3D, pero al final se optó por trabajar únicamente con las coordenadas 2D (X e Y) para simplificar el mapeo de las posiciones de las manos a parámetros de sonido y visuales. Esto facilitó la implementación y mejoró tanto la experiencia del usuario como el rendimiento.
+
+=== Dificultad 3: Generación de sonido en tiempo real
+
+La generación de sonido en tiempo real presentó varios desafíos, especialmente en la creación de ondas suaves y agradables al oído. Se experimentó con diferentes tipos de osciladores y envolventes para encontrar una configuración que produjera un sonido satisfactorio. Finalmente, se optó por utilizar ondas senoidales con envolventes ADSR para lograr un sonido más musical. Dado que ningún miembro del equipo tenía experiencia previa en síntesis de audio, se dedicó tiempo a investigar y aprender los conceptos básicos necesarios para implementar esta funcionalidad.
+
+#v(1fr)
 #pagebreak()
+
 // ===============================
 // 4. ¿Cómo se usa?  (≈ 1 página)
 // ===============================
 
 = ¿Cómo se usa? <uso>
+A continuación, se describen las instrucciones para acceder y utilizar el instrumento virtual desarrollado en este proyecto.
 
-Guía rápida de uso para un usuario nuevo.
+== Acceso o despliegue <acceso>
 
-Incluye:
-- Cómo acceder (URL)
-- Pasos básicos para las funcionalidades principales
-- Capturas de pantalla representativas (puedes insertarlas con //#image("captura-01.png", width: 80%))
-- Requisitos mínimos (navegador, conexión…)
+La forma más sencilla de acceder al proyecto es a través de la siguiente URL: \
+#link("https://orvizz.github.io/visual-oscilator/") \
+Donde el proyecto está desplegado utilizando GitHub Pages.
+
+En caso de querer ejecutar el proyecto localmente, es necesario clonar el repositorio desde GitHub y servir los archivos utilizando un servidor web local. Esto se puede hacer utilizando herramientas como `Live Server` en Visual Studio Code o cualquier otro servidor web estático.
+
+Al tratarse de una aplicación web que trabaja con visión por computador, es necesario utilizar un navegador moderno que soporte las APIs de cámara y WebGL. Se recomienda utilizar Google Chrome o Mozilla Firefox para una mejor compatibilidad y rendimiento. También es importante asegurarse de que el navegador tenga permisos para acceder a la cámara del dispositivo.
+
+== Canvas
+
+Para entender mejor cómo interactuar con el instrumento, es importante conocer como funciona el canvas. Se trata de un rectángulo centrado en la pantalla que muestra la imagen capturada por la cámara, con un efecto de espejo horizontal para facilitar la interacción. Dentro de este rectángulo, se renderiza la imagen obtenida por la cámara.
+
+El canvas funciona como un plano bidimensional, donde solo se tienen en cuenta las coordenadas X e Y de las manos. La coordenada X representa la posición horizontal (izquierda a derecha) y la coordenada Y representa la posición vertical (arriba a abajo). La profundidad (coordenada Z) no se utiliza en este proyecto debido a que solo aportaba dificultad y problemas de rendimiento y no era necesaria para la funcionalidad del instrumento.
+
+== Controles y mecánicas del instrumento
+
+El instrumento se contrloa mediante la distancia y posición de las manos detectadas por la cámara.
+
+Para activar el instrumento, es necesario que la cámara detecte dos manos. Una vez que se detectan dos manos, se genera una onda visual que conecta ambas manos y produce un sonido. 
+
+Las diferentes posibilidades de configuracion del sonido mediante la posición de las manos son las siguientes:
+- #link(<freq>)[Frecuencia de la onda sonora]
+- #link(<amp>)[Amplitud del sonido]
+- #link(<pan>)[Panner o panoramización del sonido]
+
+=== Frecuencia de la onda sonora  <freq>
+
+La frecuencia del sonido se controla mediante la distancia eucídea de las dos manos, y es inversamente proporcional a dicha distancia. Es decir, cuanto más cerca estén las manos, mayor será la frecuencia del sonido (tono más agudo), y cuanto más separadas estén, menor será la frecuencia (tono más grave).
+
+Esta relación inversa permite a los usuarios controlar el tono del sonido de manera intuitiva, acercando o alejando las manos para producir diferentes notas musicales.
+
+La distancia entre las manos se calcula utilizando la fórmula de distancia euclidiana en dos dimensiones:
+
+
+$ d(x, y) = sqrt((x_1 - x_2)^2 + (y_1 - y_2)^2) $
+
+Donde (x1, y1) y (x2, y2) son las coordenadas de las dos manos en el canvas.
+
+Una vez calculada la distancia, se mapea a un rango de frecuencias audibles utilizando una función de mapeo logarítmica para una mejor percepción auditiva. La fórmula utilizada para el mapeo es la siguiente:
+
+$ f(v) = o_min dot (frac(o_max, o_min))^(frac(v - i_min, i_max - i_min)) $
+
+Donde:
+- `f(v)` es la frecuencia resultante.
+- `o_min` y `o_max` son los valores mínimo y máximo del rango de salida (frecuencia).
+- `i_min` y `i_max` son los valores mínimo y máximo del rango de entrada (distancia entre manos).
+- `v` es la distancia entre las manos calculada previamente.
+
+=== Amplitud del sonido <amp>
+
+De una forma similar, la amplitud del sonido se controla mediante la posición vertical (coordenada Y) de las dos manos. Cuanto más alta estén las manos en el canvas, mayor será la amplitud del sonido (volumen más alto), y cuanto más bajas estén, menor será la amplitud (volumen más bajo).
+
+Esta relación directa permite a los usuarios controlar el volumen del sonido de manera intuitiva, elevando o bajando las manos para producir diferentes niveles de volumen.
+
+=== Panner o panoramización del sonido <pan>
+
+El panner o panoramización del sonido se controla mediante la diferencia de distancia vertical entre las dos manos. Si la mano izquierda está más alta que la derecha, el sonido se panoramiza hacia la izquierda, y viceversa. Si ambas manos están a la misma altura, el sonido se centra.
+
+El concepto de panoramización permite a los usuarios controlar la ubicación espacial del sonido en el campo estéreo, creando una experiencia auditiva más inmersiva.
+
+#rect(
+  fill: rgb("#e1f5fe"), // Un azul claro de fondo
+  stroke: (left: 4pt + blue), // Una línea gruesa a la izquierda
+  inset: 12pt, // Espaciado interno
+  radius: 2pt
+)[
+  *Atención:* La panoramización del sonido se aprecia mejor con el uso de auriculares.
+]
+
+Para llevar a cabo el objeto de panoramización, se utiliza Panner3D de la librería p5.sound, que permite posicionar el sonido en un espacio tridimensional. En este caso, solo se utilizan el eje X y el eje Z o profundidad. Este efecto simula u seminírculo alrededor del oyente, donde el eje X representa la izquierda y derecha, y el eje Z representa la profundidad (cerca o lejos).
+
+Así pues, la posición del panner se calcula de la siguiente manera:
+
+
+#nota("Cálculo de Panoramización y Espacialización")[
+  Para determinar la posición del sonido en el espacio 3D basándonos en los niveles de volumen de cada canal, seguimos este proceso:
+
+  1. *Normalización de volúmenes y factor de Pan:*
+  $
+    L &= max(0, V_L) \
+    R &= max(0, V_R) \
+    S &= cases(L + R & "si" L + R != 0, 1 & "en otro caso") \
+    p &= (R - L) / S 
+  $
+
+  2. *Traducción a coordenadas espaciales (Semicírculo):*
+  $
+    theta &= p dot pi / 2 \
+    x &= sin(theta) dot r \
+    z &= -cos(theta) dot r
+  $
+  Donde $r = 3$ representa el radio de distancia al oyente,  $(x, 0, z)$ son las coordenadas espaciales del panner y $V_L$ y $V_R$ son los volúmenes de los canales izquierdo y derecho respectivamente.
+]
 
 #v(1fr)
 #pagebreak()
@@ -229,26 +347,33 @@ Incluye:
 
 = ¿Qué hemos aprendido? <aprendizaje>
 
-Reflexión personal y técnica tras haber realizado el proyecto.
+Tras haber completado el proyecto, hemos adquirido una serie de aprendizajes tanto técnicos como transversales que han enriquecido nuestra experiencia y habilidades en el ámbito de la informática audiovisual. 
 
-Posibles apartados:
+Dado que este proyecto tiene una carga bastante creativa y experimental, aparte de la carga técnica a la que estamos acostumbrados, hemos aprendido a combinar ambos aspectos para crear una experiencia interactiva atractiva y funcional.
 
 == Aprendizajes técnicos
 
-- Nuevas tecnologías / patrones aprendidos
-- Conceptos de SIW que se han entendido mejor al aplicarlos
-- Buenas prácticas descubiertas (o errores que no volverías a cometer)
+En cuanto a tecnologías nuevas, podemos diferenciarlas en 3 grandes bloques:
+- Visión por computador: Hemos aprendido a utilizar la librería MediaPipe para el reconocimiento de manos en tiempo real, lo que nos ha permitido entender mejor los conceptos de detección y seguimiento de objetos en imágenes.
+- Síntesis de audio: Hemos explorado la librería p5.sound para la generación de sonidos en tiempo real, aprendiendo sobre osciladores, envolventes y panoramización del sonido. Esta parte ha sido especialmente desafiante, ya que ninguno de nosotros tenía experiencia previa en síntesis de audio.
+- Gráficos y visualización: Hemos utilizado p5.js para la creación de gráficos y efectos visuales, lo que nos ha permitido mejorar nuestras habilidades en la manipulación del canvas y la renderización de elementos gráficos en tiempo real.
+
+En relación con los conceptos aprendidos en la asignatura de Informática Audiovisual, hemos intentado combinar estos conocimientos técnicos para crear una experiencia interactiva que sea tanto visualmente atractiva como auditivamente interesante. Hemos aplicado conceptos de interacción hombre-máquina, diseño de interfaces y experiencia de usuario para asegurar que el instrumento sea intuitivo y fácil de usar.
+
 
 == Aprendizajes transversales
 
-- Gestión del tiempo
-- Trabajo en equipo (si aplica)
-- Comunicación con cliente/usuario imaginario
-- Debugging en producción
+En nuestro caso particular, el trabajo en equipo no ha supuesto un gran desafío, ya que los tres integrantes del equipo ya habíamos trabajado juntos en proyectos anteriores y teníamos una buena dinámica de colaboración. Sin embargo, hemos aprendido la importancia de la comunicación efectiva y la coordinación en proyectos creativos, donde las ideas y enfoques pueden variar significativamente entre los miembros del equipo, ya que en varias ocasiones hemos tenido ideas dispares sobre ciertos aspectos del proyecto sin darnos cuenta (es decir, creíamos que estábamos de acuerdo en algo, pero luego resultaba que no era así).
+
+A lo largo del proyecto, hemos descartado varias ideas y enfoques que creíamos que iban a funcionar, pero que al implementarlos nos dimos cuenta de que no eran adecuados. Esto nos ha enseñado la importancia de la iteración y la experimentación en el desarrollo de proyectos creativos. Hemos aprendido a ser flexibles y adaptarnos a los desafíos que surgen durante el desarrollo, buscando siempre la mejor solución posible.
+
+En concreto, alguna implementación que tuvimos que descartar fue el uso de la coordenada Z para controlar algún parámetro del sonido, ya que resultaba confuso para los usuarios y no aportaba valor añadido a la experiencia. Otra idea descartada fue la addición de efectos de sonido como el eco, ya que aun estando implementado en el módulo de sonido, no encajaba bien con los controles del instrumento y complicaba innecesariamente la experiencia del usuario.
 
 == Valoración global
 
-¿Ha merecido la pena? ¿Lo volverías a hacer de forma diferente? ¿Qué te llevas para tu futuro profesional?
+En general, consideramos que el proyecto ha sido una experiencia muy enriquecedora que nos ha permitido aprender y aplicar una variedad de habilidades técnicas y creativas. Creemos que ha sido una gran primnera toma de contacto con la visión por computador, ya que ha sido una experiencia amigable y entretenida. Lo mismo para el trabajo con sonido, que nos ha permitido entender algo más sobre un área que cae fuera de nuestro conocimiento habitual.
+
+Estamos bastante satisfechos con el resultado final del producto, aunque somos conscientes de que hay áreas de mejora y funcionalidades adicionales que podrían implementarse en el futuro para enriquecer aún más la experiencia del usuario.
 
 #v(1fr)
 #pagebreak()
