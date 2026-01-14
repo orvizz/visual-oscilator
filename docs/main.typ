@@ -130,9 +130,7 @@ Nuestra idea inicial era, dado el espacio abierto típico de una exposición y l
 
 El objetivo del proyecto es ofrecer una experiencia de exploración y experimentación de las reglas del instrumento, que prueben a interactuar con la cámara y descubran cómo influencia al sonido, y que con eso, intenten hacer algo de música.
 
-TODO
 #v(1fr)
-
 #pagebreak()
 // ===============================
 // 3. ¿Cómo se ha hecho?  (≈ 2–3 páginas)
@@ -232,23 +230,15 @@ Al principio, resultó complicado trabajar con coordenadas 3D. Era la idea origi
 
 La generación de sonido en tiempo real presentó varios desafíos, especialmente en la creación de ondas suaves y agradables al oído. Se experimentó con diferentes tipos de osciladores y envolventes para encontrar una configuración que produjera un sonido satisfactorio. Finalmente, se optó por utilizar ondas senoidales con envolventes ADSR para lograr un sonido más musical. Dado que ningún miembro del equipo tenía experiencia previa en síntesis de audio, se dedicó tiempo a investigar y aprender los conceptos básicos necesarios para implementar esta funcionalidad.
 
-#v(0.8fr)
-
+#v(1fr)
 #pagebreak()
+
 // ===============================
 // 4. ¿Cómo se usa?  (≈ 1 página)
 // ===============================
 
 = ¿Cómo se usa? <uso>
-
-TODO
-Guía rápida de uso para un usuario nuevo.
-
-Incluye:
-- Cómo acceder (URL)
-- Pasos básicos para las funcionalidades principales
-- Capturas de pantalla representativas (puedes insertarlas con //#image("captura-01.png", width: 80%))
-- Requisitos mínimos (navegador, conexión…)
+A continuación, se describen las instrucciones para acceder y utilizar el instrumento virtual desarrollado en este proyecto.
 
 == Acceso o despliegue <acceso>
 
@@ -353,29 +343,34 @@ Así pues, la posición del panner se calcula de la siguiente manera:
 // ===============================
 
 = ¿Qué hemos aprendido? <aprendizaje>
-TODO
-Reflexión personal y técnica tras haber realizado el proyecto.
 
-Posibles apartados:
+Tras haber completado el proyecto, hemos adquirido una serie de aprendizajes tanto técnicos como transversales que han enriquecido nuestra experiencia y habilidades en el ámbito de la informática audiovisual. 
+
+Dado que este proyecto tiene una carga bastante creativa y experimental, aparte de la carga técnica a la que estamos acostumbrados, hemos aprendido a combinar ambos aspectos para crear una experiencia interactiva atractiva y funcional.
 
 == Aprendizajes técnicos
-TODO
-- Nuevas tecnologías / patrones aprendidos
-- Conceptos de SIW que se han entendido mejor al aplicarlos
-- Buenas prácticas descubiertas (o errores que no volverías a cometer)
+
+En cuanto a tecnologías nuevas, podemos diferenciarlas en 3 grandes bloques:
+- Visión por computador: Hemos aprendido a utilizar la librería MediaPipe para el reconocimiento de manos en tiempo real, lo que nos ha permitido entender mejor los conceptos de detección y seguimiento de objetos en imágenes.
+- Síntesis de audio: Hemos explorado la librería p5.sound para la generación de sonidos en tiempo real, aprendiendo sobre osciladores, envolventes y panoramización del sonido. Esta parte ha sido especialmente desafiante, ya que ninguno de nosotros tenía experiencia previa en síntesis de audio.
+- Gráficos y visualización: Hemos utilizado p5.js para la creación de gráficos y efectos visuales, lo que nos ha permitido mejorar nuestras habilidades en la manipulación del canvas y la renderización de elementos gráficos en tiempo real.
+
+En relación con los conceptos aprendidos en la asignatura de Informática Audiovisual, hemos intentado combinar estos conocimientos técnicos para crear una experiencia interactiva que sea tanto visualmente atractiva como auditivamente interesante. Hemos aplicado conceptos de interacción hombre-máquina, diseño de interfaces y experiencia de usuario para asegurar que el instrumento sea intuitivo y fácil de usar.
+
 
 == Aprendizajes transversales
 
-TODO
-- Gestión del tiempo
-- Trabajo en equipo (si aplica)
-- Comunicación con cliente/usuario imaginario
-- Debugging en producción
+En nuestro caso particular, el trabajo en equipo no ha supuesto un gran desafío, ya que los tres integrantes del equipo ya habíamos trabajado juntos en proyectos anteriores y teníamos una buena dinámica de colaboración. Sin embargo, hemos aprendido la importancia de la comunicación efectiva y la coordinación en proyectos creativos, donde las ideas y enfoques pueden variar significativamente entre los miembros del equipo, ya que en varias ocasiones hemos tenido ideas dispares sobre ciertos aspectos del proyecto sin darnos cuenta (es decir, creíamos que estábamos de acuerdo en algo, pero luego resultaba que no era así).
+
+A lo largo del proyecto, hemos descartado varias ideas y enfoques que creíamos que iban a funcionar, pero que al implementarlos nos dimos cuenta de que no eran adecuados. Esto nos ha enseñado la importancia de la iteración y la experimentación en el desarrollo de proyectos creativos. Hemos aprendido a ser flexibles y adaptarnos a los desafíos que surgen durante el desarrollo, buscando siempre la mejor solución posible.
+
+En concreto, alguna implementación que tuvimos que descartar fue el uso de la coordenada Z para controlar algún parámetro del sonido, ya que resultaba confuso para los usuarios y no aportaba valor añadido a la experiencia. Otra idea descartada fue la addición de efectos de sonido como el eco, ya que aun estando implementado en el módulo de sonido, no encajaba bien con los controles del instrumento y complicaba innecesariamente la experiencia del usuario.
 
 == Valoración global
 
-TODO
-¿Ha merecido la pena? ¿Lo volverías a hacer de forma diferente? ¿Qué te llevas para tu futuro profesional?
+En general, consideramos que el proyecto ha sido una experiencia muy enriquecedora que nos ha permitido aprender y aplicar una variedad de habilidades técnicas y creativas. Creemos que ha sido una gran primnera toma de contacto con la visión por computador, ya que ha sido una experiencia amigable y entretenida. Lo mismo para el trabajo con sonido, que nos ha permitido entender algo más sobre un área que cae fuera de nuestro conocimiento habitual.
+
+Estamos bastante satisfechos con el resultado final del producto, aunque somos conscientes de que hay áreas de mejora y funcionalidades adicionales que podrían implementarse en el futuro para enriquecer aún más la experiencia del usuario.
 
 #v(1fr)
 #pagebreak()
