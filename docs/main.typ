@@ -46,7 +46,7 @@
   #v(0.8cm)
 
   #text(size: 15pt)[
-    Sistemas de Información para la Web
+    Informática Audiovisual
   ]
 
   #v(1.2cm)
@@ -66,7 +66,7 @@
   #v(1.5cm)
 
   #text(weight: "semibold")[
-    Mario Orviz Viesca \
+    Mario Orviz Viesca - UO295180 \ 
     Sergio Riesco Collar \
     Javier Carrasco Arango
   ]
@@ -120,6 +120,7 @@ Nuestra idea inicial era, dado el espacio abierto típico de una exposición y l
 
 El objetivo del proyecto es ofrecer una experiencia de exploración y experimentación de las reglas del instrumento, que prueben a interactuar con la cámara y descubran cómo influencia al sonido, y que con eso, intenten hacer algo de música.
 
+TODO
 #v(1fr)
 
 #pagebreak()
@@ -192,19 +193,34 @@ La lógica del sistema está distribuida de forma modular para facilitar el mant
 
 == Decisiones técnicas importantes
 
-TODO
-Ejemplos:
-- ¿Por qué elegiste X en lugar de Y? (React vs Vue, REST vs GraphQL, SQL vs NoSQL…)
-- Autenticación / autorización
-- Gestión del estado
-- Manejo de formularios
-- SEO / rendimiento / accesibilidad
-- Despliegue y CI/CD
+
+Para realizar este proyecto, se decidió utilizar p5.js como framework principal para la gestión del canvas y la interacción con la cámara, debido a su facilidad de uso y su integración con la librería p5.sound, que facilitó enormemente la generación de audio en tiempo real.
+
+Antes de decidirse por p5.js, se consideraron otras opciones como Processing, pero finalmente nos decantamos por p5.js debido a su fácil integreación con tecnologías de visión por computador como MediaPipe, que fue crucial para el reconocimiento de las manos.
+
+Además, no se utilizó ningún framework de frontend como React o Vue, ya que el proyecto no requería una interfaz de usuario compleja ni una gestión avanzada del estado. En su lugar, se optó por una estructura más sencilla y directa utilizando HTML, CSS y JavaScript.
+
+Otro punto a favor de las tecnologías elegidas fue la facilidad de despliegue, ya que al tratarse de una aplicación web estática, se puede alojar en cualquier servidor web sin necesidad de configuraciones adicionales.
+
+Para realizar el despliegue, se optó por GitHub Pages debido a su simplicidad y gratuidad para proyectos estáticos, lo que permitió una rápida puesta en marcha y acceso público al proyecto.
+
+De todas formas, se consideraron otras opciones de despliegue como Azure, pero finalmente se decidió por GitHub Pages por su integración directa con el repositorio del proyecto y su simplicidad.
 
 == Dificultades técnicas encontradas y cómo se resolvieron
 
-TODO
-(Principalmente las más relevantes para la asignatura)
+En las siguientes secciones se describen algunas de las dificultades técnicas más relevantes encontradas durante el desarrollo del proyecto y las soluciones implementadas para superarlas.
+
+=== Dificultad 1: Latencia en el reconocimiento de manos
+
+Una dificultad técnica importante fue la latencia en la captura de vídeo y el procesamiento de las manos, que afectaba a la experiencia del usuario. Para mitigar este problema, se optimizó el código de reconocimiento, descartando valores no necesarios aportados por MediaPipe y tratando de reducir la carga computacional en cada frame.
+
+=== Dificultad 2: Espacio dimensional y mapeo de coordenadas
+
+Al principio, resultó complicado trabajar con coordenadas 3D. Era la idea original, ya que MediaPipe proporciona coordenadas en 3D, pero al final se optó por trabajar únicamente con las coordenadas 2D (X e Y) para simplificar el mapeo de las posiciones de las manos a parámetros de sonido y visuales. Esto facilitó la implementación y mejoró tanto la experiencia del usuario como el rendimiento.
+
+=== Dificultad 3: Generación de sonido en tiempo real
+
+La generación de sonido en tiempo real presentó varios desafíos, especialmente en la creación de ondas suaves y agradables al oído. Se experimentó con diferentes tipos de osciladores y envolventes para encontrar una configuración que produjera un sonido satisfactorio. Finalmente, se optó por utilizar ondas senoidales con envolventes ADSR para lograr un sonido más musical. Dado que ningún miembro del equipo tenía experiencia previa en síntesis de audio, se dedicó tiempo a investigar y aprender los conceptos básicos necesarios para implementar esta funcionalidad.
 
 #v(0.8fr)
 
